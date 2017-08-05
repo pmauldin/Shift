@@ -7,12 +7,12 @@ import groovy.transform.CompileStatic
 class Shift extends Game {
 
     @Override
-    void create () {
+    void create() {
         this.setScreen(new GameScreen())
     }
 
     @Override
-    void render () {
+    void render() {
         super.render()
     }
 

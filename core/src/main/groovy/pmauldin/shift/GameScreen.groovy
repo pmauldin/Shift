@@ -7,9 +7,9 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.GL20
 import groovy.transform.CompileStatic
-import pmauldin.shift.entities.AssetManager
+import pmauldin.shift.assets.AssetManager
 import pmauldin.shift.entities.EntityFactory
-
+import pmauldin.shift.entities.GameLoopInvoker
 import pmauldin.shift.entities.systems.MovementSystem
 import pmauldin.shift.entities.systems.PlayerInputSystem
 import pmauldin.shift.entities.systems.RenderSystem
@@ -18,22 +18,30 @@ import pmauldin.shift.entities.systems.RenderSystem
 class GameScreen implements Screen {
     static World entityWorld
 
-    GameScreen() {
-        AssetManager.init()
+    AssetManager assetManager
 
+    GameScreen() {
         // Systems are processed in the order defined here.
         def worldConfig = new WorldConfigurationBuilder().with(
                 new TagManager(),
                 new PlayerInputSystem(),
                 new MovementSystem(),
                 new RenderSystem())
+                .register(new GameLoopInvoker(20)) // ~50 ticks/second
                 .build()
+
+        def entityFactory = new EntityFactory()
+        assetManager = new AssetManager()
+        worldConfig.register(entityFactory)
+        worldConfig.register(assetManager)
 
         entityWorld = new World(worldConfig)
 
-        EntityFactory.init(entityWorld)
-        EntityFactory.createPlayer()
-        EntityFactory.createLevel()
+        entityWorld.inject(entityFactory)
+
+        entityFactory.init(entityWorld)
+        entityFactory.createPlayer()
+        entityFactory.createLevel()
     }
 
     @Override
@@ -47,7 +55,7 @@ class GameScreen implements Screen {
 
     @Override
     void resize(int width, int height) {
-        entityWorld.getSystem(RenderSystem)?.resizeCamera(width, height)
+        entityWorld.getSystem(RenderSystem).resizeCamera(width, height)
     }
 
     @Override
@@ -68,6 +76,6 @@ class GameScreen implements Screen {
 
     @Override
     void dispose() {
-        AssetManager.dispose()
+        assetManager.dispose()
     }
 }
