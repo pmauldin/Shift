@@ -3,13 +3,13 @@ package pmauldin.shift.entities
 import com.artemis.ComponentMapper
 import com.artemis.World
 import com.artemis.managers.TagManager
-import com.badlogic.gdx.math.Rectangle
 import groovy.transform.CompileStatic
+
 import pmauldin.shift.assets.Tile
 import pmauldin.shift.assets.TileFactory
-import pmauldin.shift.entities.components.LevelComponent
-import pmauldin.shift.entities.components.PositionComponent
-import pmauldin.shift.entities.components.TextureComponent as TextureComponent
+
+import pmauldin.shift.entities.components.TransformComponent
+import pmauldin.shift.entities.components.RenderComponent as TextureComponent
 import pmauldin.shift.entities.components.VelocityComponent
 
 @CompileStatic
@@ -17,9 +17,8 @@ class EntityFactory {
     World world
     TagManager tagManager
 
-    ComponentMapper<LevelComponent> mLevel
-    ComponentMapper<PositionComponent> mPosition
-    ComponentMapper<TextureComponent> mTexture
+    ComponentMapper<TransformComponent> mPosition
+    ComponentMapper<TextureComponent> mRender
     ComponentMapper<VelocityComponent> mVelocity
 
     void init(World world) {
@@ -29,7 +28,7 @@ class EntityFactory {
     int createPlayer() {
         def entity = world.create()
 
-        addDrawableComponents(entity, 5, 400, 100, Tile.PLAYER)
+        addDrawableComponents(entity, 5, 400, 200, Tile.PLAYER)
 
         mVelocity.create(entity)
 
@@ -39,26 +38,29 @@ class EntityFactory {
 
     int createLevel() {
         def entity = world.create()
-        def level = mLevel.create(entity)
-        level.bounds = new Rectangle(0, 0, 800, 480)
 
         def tileSize = 32
-        int xTiles = level.bounds.width / tileSize as int
-        int yTiles = level.bounds.height / tileSize as int
-        level.tileIds = new int[xTiles][yTiles]
+        int xTiles = 800 / tileSize as int
+        int yTiles = 480 / tileSize as int
 
-        createTiles(level, tileSize, xTiles, yTiles)
+        createTiles(tileSize, xTiles, yTiles)
 
         tagEntity(entity, Tags.LEVEL)
         return entity
     }
 
-    void createTiles(LevelComponent level, int tileSize, int xTiles, int yTiles) {
+    void createTiles(int tileSize, int xTiles, int yTiles) {
         for (int x = 0; x < xTiles; x++) {
             for (int y = 0; y < yTiles; y++) {
                 def tileId = world.create()
-                addDrawableComponents(tileId, 0, x * tileSize, y * tileSize, Tile.GRASS)
-                level.tileIds[x][0]
+
+                def tile
+                if (y == 4) {
+                    tile = Tile.WATER
+                }  else {
+                    tile = Tile.GRASS
+                }
+                addDrawableComponents(tileId, 0, x * tileSize, y * tileSize, tile)
             }
         }
     }
@@ -67,12 +69,10 @@ class EntityFactory {
         def pos = mPosition.create(entityId)
         pos.x = x
         pos.y = y
-        pos.width = Tile.TILE_SIZE
-        pos.height = Tile.TILE_SIZE
 
-        def texture = mTexture.create(entityId)
-        texture.texture = TileFactory.getTileTexture(tile)
-        texture.layer = layer
+        def renderComponent = mRender.create(entityId)
+        renderComponent.texture = TileFactory.getTileTexture(tile)
+        renderComponent.layer = layer
     }
 
     void tagEntity(int entity, String tag) {

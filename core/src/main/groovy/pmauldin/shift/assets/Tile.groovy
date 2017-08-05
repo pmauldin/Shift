@@ -5,6 +5,8 @@ import groovy.transform.CompileStatic
 @CompileStatic
 enum Tile {
     GRASS(14, 1),
+    WATER(13, 6),
+    TREE(8,1 ),
     PLAYER(0, 8)
 
     static final int TILE_SIZE = 32

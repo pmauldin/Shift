@@ -14,7 +14,7 @@ import pmauldin.shift.entities.components.VelocityComponent
 class PlayerInputSystem extends BaseSystem {
     ComponentMapper<VelocityComponent> mVelocity
 
-    static final int SPEED = 5
+    static final int SPEED = 300
     int playerEntity = -1
 
     @Override

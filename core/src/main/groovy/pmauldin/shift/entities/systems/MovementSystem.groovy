@@ -3,18 +3,19 @@ package pmauldin.shift.entities.systems
 import com.artemis.Aspect
 import com.artemis.ComponentMapper
 import com.artemis.systems.IteratingSystem
+import com.badlogic.gdx.Gdx
 import groovy.transform.CompileStatic
 import pmauldin.shift.entities.LogicSystem
-import pmauldin.shift.entities.components.PositionComponent
+import pmauldin.shift.entities.components.TransformComponent
 import pmauldin.shift.entities.components.VelocityComponent
 
 @CompileStatic
 class MovementSystem extends IteratingSystem implements LogicSystem {
-    ComponentMapper<PositionComponent> mPositionComponent
+    ComponentMapper<TransformComponent> mPositionComponent
     ComponentMapper<VelocityComponent> mVelocityComponent
 
     MovementSystem() {
-        super(Aspect.all(PositionComponent, VelocityComponent))
+        super(Aspect.all(TransformComponent, VelocityComponent))
     }
 
     @Override
@@ -22,7 +23,8 @@ class MovementSystem extends IteratingSystem implements LogicSystem {
         def position = mPositionComponent.get(entityId)
         def velocity = mVelocityComponent.get(entityId)
 
-        position.x += velocity.x
-        position.y += velocity.y
+        float delta = Gdx.app.graphics.getDeltaTime()
+        position.x += velocity.x * delta
+        position.y += velocity.y * delta
     }
 }
