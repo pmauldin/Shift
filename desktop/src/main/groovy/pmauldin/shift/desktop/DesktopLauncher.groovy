@@ -11,6 +11,7 @@ class DesktopLauncher {
         config.title = "Shift"
         config.width = 800
         config.height = 480
+        config.vSyncEnabled = false
         def application = new LwjglApplication(new Shift(), config)
     }
 }

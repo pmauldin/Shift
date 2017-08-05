@@ -91,7 +91,7 @@ class GameLoopInvoker extends SystemInvocationStrategy {
          * Uncomment this line if you use the world's delta within your systems.
          * I recommend to use a fixed value for your logic delta like millisPerLogicTick or nanosPerLogicTick
          */
-		world.setDelta(nanosPerLogicTick * 0.000000001f as float)
+//		world.setDelta(nanosPerLogicTick * 0.000000001f as float)
 
         while (accumulator >= nanosPerLogicTick) {
             /** Process all entity systems inheriting from {@link LogicSystem} */
@@ -113,7 +113,7 @@ class GameLoopInvoker extends SystemInvocationStrategy {
         /**
          * Uncomment this line if you use the world's delta within your systems.
          */
-		world.setDelta(frameTime * 0.000000001f as float)
+//		world.setDelta(frameTime * 0.000000001f as float)
 
         /**
          * When you divide accumulator by nanosPerLogicTick you get your alpha.

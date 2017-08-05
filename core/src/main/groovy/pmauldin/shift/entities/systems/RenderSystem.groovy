@@ -4,31 +4,24 @@ import com.artemis.Aspect
 import com.artemis.BaseEntitySystem
 import com.artemis.ComponentMapper
 import com.artemis.annotations.Wire
-import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.Array
 import groovy.transform.CompileStatic
 
-import pmauldin.shift.entities.components.TransformComponent
-import pmauldin.shift.entities.components.RenderComponent
+import pmauldin.shift.entities.components.Transform
+import pmauldin.shift.entities.components.Renderable
 
 @CompileStatic
 class RenderSystem extends BaseEntitySystem {
-    ComponentMapper<TransformComponent> mTransform
-    ComponentMapper<RenderComponent> mRender
+    ComponentMapper<Transform> mTransform
+    ComponentMapper<Renderable> mRender
 
     @Wire
     SpriteBatch batch
-
-    OrthographicCamera camera
-
     Map<Integer, Array<Integer>> entityLayerMap
 
     RenderSystem() {
-        super(Aspect.all(TransformComponent, RenderComponent))
-
-        camera = new OrthographicCamera()
-        resizeCamera(800, 480)
+        super(Aspect.all(Transform, Renderable))
 
         entityLayerMap = new HashMap<>()
     }
@@ -50,8 +43,6 @@ class RenderSystem extends BaseEntitySystem {
 
     @Override
     void begin() {
-        camera.update()
-        batch.setProjectionMatrix(camera.combined)
         batch.begin()
     }
 
@@ -60,9 +51,10 @@ class RenderSystem extends BaseEntitySystem {
         entityLayerMap.keySet().sort().forEach { int layerId ->
             entityLayerMap.get(layerId).forEach { int entityId ->
                 def pos = mTransform.get(entityId)
-                def texture = mRender.get(entityId).texture
+                def sprite = mRender.get(entityId).sprite
 
-                batch.draw(texture, pos.x, pos.y)
+                sprite.setPosition(pos.x - sprite.getOriginX() as float, pos.y - sprite.getOriginY() as float)
+                sprite.draw(batch)
             }
         }
     }
@@ -70,9 +62,5 @@ class RenderSystem extends BaseEntitySystem {
     @Override
     void end() {
         batch.end()
-    }
-
-    void resizeCamera(int width, int height) {
-        camera.setToOrtho(false, width, height)
     }
 }
