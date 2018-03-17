@@ -50,7 +50,8 @@ class RenderSystem extends BaseEntitySystem {
 		entityLayerMap.keySet().sort().forEach { int layerId ->
 			entityLayerMap.get(layerId).forEach { int entityId ->
 				def pos = mTransform.get(entityId)
-				def sprite = mRender.get(entityId).sprite
+				def renderable = mRender.get(entityId)
+				def sprite = renderable.sprites.get(renderable.activeSprite)
 
 				sprite.setPosition(pos.x - sprite.getOriginX() as float, pos.y - sprite.getOriginY() as float)
 				sprite.draw(batch)

@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.World
 import groovy.transform.CompileStatic
 import pmauldin.shift.GameScreen
 import pmauldin.shift.Util.Keyboard
+import pmauldin.shift.entities.components.core.Renderable
 import pmauldin.shift.entities.components.inventory.InventoryItem
 import pmauldin.shift.entities.components.inventory.NewInventoryItem
 import pmauldin.shift.entities.components.Player
@@ -20,12 +21,12 @@ import pmauldin.shift.entities.components.Resource
 import pmauldin.shift.entities.components.core.Rigidbody
 import pmauldin.shift.entities.systems.inventory.InventorySystem
 
-import java.security.Key
 
 @CompileStatic
 class PlayerSystem extends IteratingSystem {
 	ComponentMapper<Player> mPlayer
 	ComponentMapper<Rigidbody> mRigidbody
+	ComponentMapper<Renderable> mRenderable
 	ComponentMapper<Resource> mResource
 	ComponentMapper<NewInventoryItem> mNewInventoryItem
 
@@ -47,16 +48,19 @@ class PlayerSystem extends IteratingSystem {
 	protected void process(int entityId) {
 		def player = mPlayer.get(entityId)
 		def body = mRigidbody.get(entityId).body
+		def renderable = mRenderable.get(entityId)
 
 		if (Keyboard.isLeftPressed()) {
 			currentVelocity.x = -1
 			player.xDirection = -1
+			renderable.activeSprite = 1
 			if (!Keyboard.isUpPressed() && !Keyboard.isDownPressed()) {
 				player.yDirection = 0
 			}
 		} else if (Keyboard.isRightPressed()) {
 			currentVelocity.x = 1
 			player.xDirection = 1
+			renderable.activeSprite = 2
 			if (!Keyboard.isUpPressed() && !Keyboard.isDownPressed()) {
 				player.yDirection = 0
 			}
@@ -67,12 +71,14 @@ class PlayerSystem extends IteratingSystem {
 		if (Keyboard.isUpPressed()) {
 			currentVelocity.y = 1
 			player.yDirection = 1
+			renderable.activeSprite = 3
 			if (!Keyboard.isLeftPressed() && !Keyboard.isRightPressed()) {
 				player.xDirection = 0
 			}
 		} else if (Keyboard.isDownPressed()) {
 			currentVelocity.y = -1
 			player.yDirection = -1
+			renderable.activeSprite = 0
 			if (!Keyboard.isLeftPressed() && !Keyboard.isRightPressed()) {
 				player.xDirection = 0
 			}

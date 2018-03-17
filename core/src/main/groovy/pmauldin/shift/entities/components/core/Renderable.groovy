@@ -6,6 +6,7 @@ import groovy.transform.CompileStatic
 
 @CompileStatic
 class Renderable extends Component {
-	Sprite sprite
+	List<Sprite> sprites
+	Integer activeSprite
 	Integer layer
 }

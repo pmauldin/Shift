@@ -49,7 +49,7 @@ class EntityFactory {
 		rigidbody.body = body
 		rigidbody.yOffset = 0.35f
 
-		addDrawableComponents(entity, 5, 0, 0, Entity.PLAYER)
+		addDrawableComponents(entity, 5, 0, 0, Entity.PLAYER_ENTITIES)
 
 		def inventory = mInventory.create(entity)
 		inventory.itemsMap = new HashMap<>()
@@ -100,7 +100,7 @@ class EntityFactory {
 						tile.buildResource(resource)
 					}
 
-					addDrawableComponents(tileId, 0, x, y, tile.entity)
+					addDrawableComponents(tileId, 0, x, y, [tile.entity])
 				}
 			}
 		}
@@ -134,18 +134,23 @@ class EntityFactory {
 		return shape
 	}
 
-	void addDrawableComponents(int entityId, int layer, float x, float y, Entity entity) {
+	void addDrawableComponents(int entityId, int layer, float x, float y, List<Entity> entities) {
 		def pos = mPosition.create(entityId)
 		pos.x = x
 		pos.y = y
 
 		def renderComponent = mRender.create(entityId)
-		def sprite = new Sprite(EntityTextureUtil.getEntityTexture(entity))
-		sprite.setPosition(x, y)
-		sprite.setSize(sprite.getWidth() / 32 as float, sprite.getHeight() / 32 as float)
-		sprite.setOrigin(0.5f, 0.5f)
-
-		renderComponent.sprite = sprite
+		renderComponent.sprites = new ArrayList<>()
 		renderComponent.layer = layer
+		renderComponent.activeSprite = 0
+
+		entities.each { entity ->
+			def sprite = new Sprite(EntityTextureUtil.getEntityTexture(entity))
+			sprite.setPosition(x, y)
+			sprite.setSize(sprite.getWidth() / 32 as float, sprite.getHeight() / 32 as float)
+			sprite.setOrigin(0.5f, 0.5f)
+
+			renderComponent.sprites.add(sprite)
+		}
 	}
 }
