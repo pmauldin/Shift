@@ -2,17 +2,12 @@ package pmauldin.shift.assets.tiles
 
 import groovy.transform.CompileStatic
 import pmauldin.shift.assets.Tile
+import pmauldin.shift.entities.Entity
 
 @CompileStatic
 class WaterTile extends Tile {
-	@Override
-	int xTileOffset() {
-		return 13
-	}
-
-	@Override
-	int yTileOffset() {
-		return 6
+	WaterTile() {
+		super(Entity.WATER)
 	}
 
 	@Override

@@ -2,17 +2,12 @@ package pmauldin.shift.assets.tiles
 
 import groovy.transform.CompileStatic
 import pmauldin.shift.assets.Tile
+import pmauldin.shift.entities.Entity
 
 @CompileStatic
 class TreeTile extends Tile {
-	@Override
-	int xTileOffset() {
-		return 8
-	}
-
-	@Override
-	int yTileOffset() {
-		return 1
+	TreeTile() {
+		super(Entity.TREE)
 	}
 
 	@Override

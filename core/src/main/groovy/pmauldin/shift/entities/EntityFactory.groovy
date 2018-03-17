@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.World as B2DWorld
 import groovy.transform.CompileStatic
 import pmauldin.shift.Constants
 import pmauldin.shift.assets.Tile
-import pmauldin.shift.assets.TileFactory
+import pmauldin.shift.Util.EntityTextureUtil
 import pmauldin.shift.assets.Tiles
 import pmauldin.shift.entities.components.Player
 import pmauldin.shift.entities.components.Renderable
@@ -45,7 +45,7 @@ class EntityFactory {
 		rigidbody.body = body
 		rigidbody.yOffset = 0.35f
 
-		addDrawableComponents(entity, 5, 0, 0, Tiles.PLAYER)
+		addDrawableComponents(entity, 5, 0, 0, Entity.PLAYER)
 
 		return entity
 	}
@@ -88,7 +88,7 @@ class EntityFactory {
 						rigidbody.body = body
 					}
 
-					addDrawableComponents(tileId, 0, x, y, tile)
+					addDrawableComponents(tileId, 0, x, y, tile.entity)
 				}
 			}
 		}
@@ -122,13 +122,13 @@ class EntityFactory {
 		return shape
 	}
 
-	void addDrawableComponents(int entityId, int layer, float x, float y, Tile tile) {
+	void addDrawableComponents(int entityId, int layer, float x, float y, Entity entity) {
 		def pos = mPosition.create(entityId)
 		pos.x = x
 		pos.y = y
 
 		def renderComponent = mRender.create(entityId)
-		def sprite = new Sprite(TileFactory.getTileTexture(tile))
+		def sprite = new Sprite(EntityTextureUtil.getEntityTexture(entity))
 		sprite.setPosition(x, y)
 		sprite.setSize(sprite.getWidth() / 32 as float, sprite.getHeight() / 32 as float)
 		sprite.setOrigin(0.5f, 0.5f)
