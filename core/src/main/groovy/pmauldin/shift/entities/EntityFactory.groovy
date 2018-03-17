@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.World as B2DWorld
 import groovy.transform.CompileStatic
+import pmauldin.shift.Constants
 import pmauldin.shift.GameScreen
 import pmauldin.shift.assets.Tile
 import pmauldin.shift.assets.TileFactory
@@ -42,7 +43,7 @@ class EntityFactory {
 
         def rigidbody = mRigidbody.create(entity)
         rigidbody.body = body
-        rigidbody.yOffset = 0.35
+        rigidbody.yOffset = 0.35f
 
         addDrawableComponents(entity, 5, 0, 0, Tile.PLAYER)
 
@@ -51,8 +52,8 @@ class EntityFactory {
 
     void createLevel() {
         def tileSize = 32
-        int xTiles = GameScreen.WIDTH / tileSize as int
-        int yTiles = GameScreen.HEIGHT / tileSize as int
+        int xTiles = Constants.WIDTH / tileSize as int
+        int yTiles = Constants.HEIGHT / tileSize as int
 
         createTiles(xTiles, yTiles)
     }
@@ -65,14 +66,18 @@ class EntityFactory {
                 def tile
                 if (y == 4) {
                     tile = Tile.WATER
-                    def body = createBox(x, y, 1f, 1f)
-                    body.setUserData(tileId)
-
-                    def rigidbody = mRigidbody.create(tileId)
-                    rigidbody.body = body
-                }  else {
+                } else {
                     tile = Tile.GRASS
                 }
+
+                if (tile.solid) {
+					def body = createBox(x, y, 1f, 1f)
+					body.setUserData(tileId)
+
+					def rigidbody = mRigidbody.create(tileId)
+					rigidbody.body = body
+				}
+
                 addDrawableComponents(tileId, 0, x, y, tile)
             }
         }

@@ -1,13 +1,12 @@
 package pmauldin.shift.entities.systems
 
 import com.artemis.Aspect
-import com.artemis.BaseSystem
 import com.artemis.ComponentMapper
 import com.artemis.annotations.Wire
 import com.artemis.systems.IteratingSystem
 import com.badlogic.gdx.physics.box2d.World
 import groovy.transform.CompileStatic
-import pmauldin.shift.GameScreen
+import pmauldin.shift.Constants
 import pmauldin.shift.entities.LogicSystem
 import pmauldin.shift.entities.components.Rigidbody
 import pmauldin.shift.entities.components.Transform
@@ -27,7 +26,7 @@ class PhysicsSystem extends IteratingSystem implements LogicSystem {
     @Override
     protected void begin() {
         // TODO move out of here?
-        b2dWorld.step((float) GameScreen.MILLIS_PER_LOGIC_TICK * 0.001, 8, 3)
+        b2dWorld.step(Constants.MILLIS_PER_LOGIC_TICK * 0.001 as float, 8, 3)
     }
 
     @Override

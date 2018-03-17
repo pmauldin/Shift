@@ -31,11 +31,6 @@ class GameScreen implements Screen {
     B2DWorld b2dWorld
     SpriteBatch batch
 
-    static final int MILLIS_PER_LOGIC_TICK = 20 // ~50 ticks/second
-    static final float WIDTH = 800
-    static final float HEIGHT = 480
-    static final int PPM = 32 // Pixels per meter.
-
     private OrthographicCamera camera
     private FPSLogger fpsLogger
     private Box2DDebugRenderer b2dRenderer
@@ -43,8 +38,8 @@ class GameScreen implements Screen {
 
     GameScreen() {
         /* LibGDX */
-        def scaledWidth = WIDTH / PPM as float
-        def scaledHeight = HEIGHT / PPM as float
+        def scaledWidth = Constants.WIDTH / Constants.PPM as float
+        def scaledHeight = Constants.HEIGHT / Constants.PPM as float
         camera = new OrthographicCamera(scaledWidth, scaledHeight)
         camera.position.set(scaledWidth / 2 as float, scaledHeight / 2 as float, 0)
         batch = new SpriteBatch()
@@ -62,7 +57,7 @@ class GameScreen implements Screen {
                 new PlayerSystem(),
                 new PhysicsSystem(),
                 new RenderSystem())
-                .register(new GameLoopInvoker(MILLIS_PER_LOGIC_TICK))
+                .register(new GameLoopInvoker(Constants.MILLIS_PER_LOGIC_TICK))
                 .build()
 
         assetManager = new AssetManager()
@@ -101,7 +96,7 @@ class GameScreen implements Screen {
 
     @Override
     void resize(int width, int height) {
-        camera.setToOrtho(false, width / PPM as float, height / PPM as float)
+        camera.setToOrtho(false, width / Constants.PPM as float, height / Constants.PPM as float)
     }
 
     @Override

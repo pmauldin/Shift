@@ -1,4 +1,4 @@
-package pmauldin.shift.desktop
+package main.groovy.pmauldin.shift.desktop
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
@@ -9,9 +9,11 @@ class DesktopLauncher {
     static void main(String[] args) {
         def config = new LwjglApplicationConfiguration()
         config.title = "Shift"
-        config.width = 800
-        config.height = 480
+        config.width = 1280
+        config.height = 768
         config.vSyncEnabled = false
+        config.foregroundFPS = 0
+        config.backgroundFPS = 0
         def application = new LwjglApplication(new Shift(), config)
     }
 }
