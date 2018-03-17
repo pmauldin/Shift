@@ -4,18 +4,14 @@ import com.artemis.ComponentMapper
 import com.artemis.World
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.physics.box2d.Body
-import com.badlogic.gdx.physics.box2d.BodyDef
+import com.badlogic.gdx.physics.box2d.*
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType
-import com.badlogic.gdx.physics.box2d.CircleShape
-import com.badlogic.gdx.physics.box2d.FixtureDef
-import com.badlogic.gdx.physics.box2d.PolygonShape
-import com.badlogic.gdx.physics.box2d.Shape
 import com.badlogic.gdx.physics.box2d.World as B2DWorld
 import groovy.transform.CompileStatic
 import pmauldin.shift.Constants
 import pmauldin.shift.assets.Tile
 import pmauldin.shift.assets.TileFactory
+import pmauldin.shift.assets.Tiles
 import pmauldin.shift.entities.components.Player
 import pmauldin.shift.entities.components.Renderable
 import pmauldin.shift.entities.components.Rigidbody
@@ -49,25 +45,9 @@ class EntityFactory {
 		rigidbody.body = body
 		rigidbody.yOffset = 0.35f
 
-		addDrawableComponents(entity, 5, 0, 0, Tile.PLAYER)
-//		player.reticuleId = createReticule()
+		addDrawableComponents(entity, 5, 0, 0, Tiles.PLAYER)
 
 		return entity
-	}
-
-	int createReticule() {
-		float x = 15.25f
-		float y = 10f
-
-		def entity = world.create()
-
-		def body = createBody(x, y, createCircleShape(0.08f), BodyType.StaticBody)
-		body.setUserData(entity)
-
-		def rigidbody = mRigidbody.create(entity)
-		rigidbody.body = body
-
-		entity
 	}
 
 	void createLevel() {
@@ -88,13 +68,13 @@ class EntityFactory {
 			for (int y = 0; y <= yTiles; y++) {
 				def tiles = []
 				if (y == yWater) {
-					tiles += Tile.WATER
-				} else if ((x > minXTree && x < maxXTree && y == yTree )
+					tiles += Tiles.WATER
+				} else if ((x > minXTree && x < maxXTree && y == yTree)
 						|| ((x == minXTree || x == maxXTree) && y <= yTree && y > yWater)) {
-					tiles += Tile.GRASS
-					tiles += Tile.TREE
+					tiles += Tiles.GRASS
+					tiles += Tiles.TREE
 				} else {
-					tiles += Tile.GRASS
+					tiles += Tiles.GRASS
 				}
 
 				tiles.forEach { Tile tile ->

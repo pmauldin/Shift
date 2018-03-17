@@ -1,24 +1,43 @@
 package pmauldin.shift.assets
 
 import groovy.transform.CompileStatic
+import pmauldin.shift.assets.tiles.GrassTile
+import pmauldin.shift.assets.tiles.PlayerEntity
+import pmauldin.shift.assets.tiles.TreeTile
+import pmauldin.shift.assets.tiles.WaterTile
 
 @CompileStatic
-enum Tile {
-	GRASS(14, 1, false),
-	WATER(13, 6, true),
-	TREE(8, 1, true),
-	PLAYER(0, 8, false),
-	RED(1.5f, 0, false, 16, 16)
+class Tiles {
+	static Tile GRASS = new GrassTile()
+	static Tile WATER = new WaterTile()
+	static Tile TREE = new TreeTile()
+	static Tile PLAYER = new PlayerEntity()
+}
 
+@CompileStatic
+abstract class Tile {
 	static final int TILE_SIZE = 32
-	int xOffset, yOffset, width, height
-	boolean solid
 
-	Tile(float xOffset, float yOffset, boolean solid, int width = TILE_SIZE, int height = TILE_SIZE) {
-		this.xOffset = xOffset * TILE_SIZE as int
-		this.yOffset = yOffset * TILE_SIZE as int
-		this.solid = solid
-		this.width = width
-		this.height = height
+	abstract int xTileOffset()
+	abstract int yTileOffset()
+
+	int getXOffset() {
+		return xTileOffset() * TILE_SIZE
+	}
+
+	int getYOffset() {
+		return yTileOffset() * TILE_SIZE
+	}
+
+	int getWidth() {
+		return TILE_SIZE
+	}
+
+	int getHeight() {
+		return TILE_SIZE
+	}
+
+	boolean isSolid() {
+		return false
 	}
 }
