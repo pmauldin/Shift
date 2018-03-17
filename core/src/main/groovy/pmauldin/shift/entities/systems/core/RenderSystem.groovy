@@ -1,4 +1,4 @@
-package pmauldin.shift.entities.systems
+package pmauldin.shift.entities.systems.core
 
 import com.artemis.Aspect
 import com.artemis.BaseEntitySystem
@@ -7,8 +7,8 @@ import com.artemis.annotations.Wire
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.Array
 import groovy.transform.CompileStatic
-import pmauldin.shift.entities.components.Renderable
-import pmauldin.shift.entities.components.Transform
+import pmauldin.shift.entities.components.core.Renderable
+import pmauldin.shift.entities.components.core.Transform
 
 @CompileStatic
 class RenderSystem extends BaseEntitySystem {

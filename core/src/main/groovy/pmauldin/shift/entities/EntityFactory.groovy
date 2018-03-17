@@ -12,11 +12,12 @@ import pmauldin.shift.Constants
 import pmauldin.shift.assets.Tile
 import pmauldin.shift.Util.EntityTextureUtil
 import pmauldin.shift.assets.Tiles
+import pmauldin.shift.entities.components.inventory.Inventory
 import pmauldin.shift.entities.components.Player
-import pmauldin.shift.entities.components.Renderable
+import pmauldin.shift.entities.components.core.Renderable
 import pmauldin.shift.entities.components.Resource
-import pmauldin.shift.entities.components.Rigidbody
-import pmauldin.shift.entities.components.Transform
+import pmauldin.shift.entities.components.core.Rigidbody
+import pmauldin.shift.entities.components.core.Transform
 
 @CompileStatic
 class EntityFactory {
@@ -28,6 +29,7 @@ class EntityFactory {
 	ComponentMapper<Renderable> mRender
 	ComponentMapper<Rigidbody> mRigidbody
 	ComponentMapper<Resource> mResource
+	ComponentMapper<Inventory> mInventory
 
 	void init(World world, B2DWorld b2dWorld) {
 		this.world = world
@@ -48,6 +50,9 @@ class EntityFactory {
 		rigidbody.yOffset = 0.35f
 
 		addDrawableComponents(entity, 5, 0, 0, Entity.PLAYER)
+
+		def inventory = mInventory.create(entity)
+		inventory.itemsMap = new HashMap<>()
 
 		return entity
 	}

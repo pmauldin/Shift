@@ -1,4 +1,4 @@
-package pmauldin.shift.entities.systems
+package pmauldin.shift.entities.systems.core
 
 import com.artemis.Aspect
 import com.artemis.ComponentMapper
@@ -8,8 +8,8 @@ import com.badlogic.gdx.physics.box2d.World
 import groovy.transform.CompileStatic
 import pmauldin.shift.Constants
 import pmauldin.shift.entities.LogicSystem
-import pmauldin.shift.entities.components.Rigidbody
-import pmauldin.shift.entities.components.Transform
+import pmauldin.shift.entities.components.core.Rigidbody
+import pmauldin.shift.entities.components.core.Transform
 
 @CompileStatic
 class PhysicsSystem extends IteratingSystem implements LogicSystem {

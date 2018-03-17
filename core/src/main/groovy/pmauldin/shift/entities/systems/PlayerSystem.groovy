@@ -13,15 +13,21 @@ import com.badlogic.gdx.physics.box2d.World
 import groovy.transform.CompileStatic
 import pmauldin.shift.GameScreen
 import pmauldin.shift.Util.Keyboard
+import pmauldin.shift.entities.components.inventory.InventoryItem
+import pmauldin.shift.entities.components.inventory.NewInventoryItem
 import pmauldin.shift.entities.components.Player
 import pmauldin.shift.entities.components.Resource
-import pmauldin.shift.entities.components.Rigidbody
+import pmauldin.shift.entities.components.core.Rigidbody
+import pmauldin.shift.entities.systems.inventory.InventorySystem
+
+import java.security.Key
 
 @CompileStatic
 class PlayerSystem extends IteratingSystem {
 	ComponentMapper<Player> mPlayer
 	ComponentMapper<Rigidbody> mRigidbody
 	ComponentMapper<Resource> mResource
+	ComponentMapper<NewInventoryItem> mNewInventoryItem
 
 	@Wire
 	World b2dWorld
@@ -78,6 +84,10 @@ class PlayerSystem extends IteratingSystem {
 			attack(entityId)
 		}
 
+		if (Keyboard.anyKeyJustPressed(Keys.I)) {
+			InventorySystem.printInventory(entityId)
+		}
+
 		body.setLinearVelocity(currentVelocity.nor().scl(SPEED))
 
 		camera.position.set(body.position.x, body.position.y, 0)
@@ -98,11 +108,15 @@ class PlayerSystem extends IteratingSystem {
 					int tileId = fixture.body.userData as int
 					if (mResource.has(tileId)) {
 						def resource = mResource.get(tileId)
-						System.out.println("Hit " + resource.type)
+						System.out.println("Got " + resource.type)
+
+						def newItem = mNewInventoryItem.create(playerId)
+						newItem.item = new InventoryItem(label: resource.type, count: 1)
+
 						GameScreen.entityWorld.delete(tileId)
 					}
 				} catch (Exception ex) {
-					System.out.println("Error occurred while hitting tile: " + ex.toString())
+					System.out.println("Error occurred while hitting tile: " + ex.message)
 				}
 
 				return true

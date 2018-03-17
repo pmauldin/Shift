@@ -1,4 +1,4 @@
-package pmauldin.shift.entities.components
+package pmauldin.shift.entities.components.core
 
 import com.artemis.Component
 import com.badlogic.gdx.physics.box2d.Body

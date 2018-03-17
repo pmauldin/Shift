@@ -19,9 +19,11 @@ import groovy.transform.CompileStatic
 import pmauldin.shift.Util.Keyboard
 import pmauldin.shift.entities.EntityFactory
 import pmauldin.shift.entities.GameLoopInvoker
-import pmauldin.shift.entities.systems.PhysicsSystem
+import pmauldin.shift.entities.systems.inventory.InventorySystem
+import pmauldin.shift.entities.systems.inventory.InventoryTransferSystem
+import pmauldin.shift.entities.systems.core.PhysicsSystem
 import pmauldin.shift.entities.systems.PlayerSystem
-import pmauldin.shift.entities.systems.RenderSystem
+import pmauldin.shift.entities.systems.core.RenderSystem
 
 @CompileStatic
 class GameScreen implements Screen {
@@ -56,7 +58,9 @@ class GameScreen implements Screen {
 		def worldConfig = new WorldConfigurationBuilder().with(
 				new PlayerSystem(camera),
 				new PhysicsSystem(),
-				new RenderSystem())
+				new RenderSystem(),
+				new InventorySystem(),
+				new InventoryTransferSystem())
 				.register(new GameLoopInvoker(Constants.MILLIS_PER_LOGIC_TICK))
 				.build()
 
