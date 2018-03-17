@@ -6,6 +6,6 @@ import groovy.transform.CompileStatic
 
 @CompileStatic
 class Rigidbody extends Component {
-    Body body
-    float xOffset = 0.0, yOffset = 0.0
+	Body body
+	float xOffset = 0.0, yOffset = 0.0
 }

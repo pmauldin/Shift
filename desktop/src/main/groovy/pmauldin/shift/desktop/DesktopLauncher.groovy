@@ -14,6 +14,6 @@ class DesktopLauncher {
         config.vSyncEnabled = false
         config.foregroundFPS = 0
         config.backgroundFPS = 0
-        def application = new LwjglApplication(new Shift(), config)
+        new LwjglApplication(new Shift(), config)
     }
 }

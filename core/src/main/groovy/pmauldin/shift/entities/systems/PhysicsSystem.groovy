@@ -13,29 +13,29 @@ import pmauldin.shift.entities.components.Transform
 
 @CompileStatic
 class PhysicsSystem extends IteratingSystem implements LogicSystem {
-    ComponentMapper<Rigidbody> mRigidbody
-    ComponentMapper<Transform> mTransform
+	ComponentMapper<Rigidbody> mRigidbody
+	ComponentMapper<Transform> mTransform
 
-    @Wire
-    World b2dWorld
+	@Wire
+	World b2dWorld
 
-    PhysicsSystem() {
-        super(Aspect.all(Rigidbody, Transform))
-    }
+	PhysicsSystem() {
+		super(Aspect.all(Rigidbody, Transform))
+	}
 
-    @Override
-    protected void begin() {
-        // TODO move out of here?
-        b2dWorld.step(Constants.MILLIS_PER_LOGIC_TICK * 0.001 as float, 8, 3)
-    }
+	@Override
+	protected void begin() {
+		// TODO move out of here?
+		b2dWorld.step(Constants.TIMESTEP_IN_SECONDS, 8, 3)
+	}
 
-    @Override
-    protected void process(int entityId) {
-        def transform = mTransform.get(entityId)
-        def rigidBody = mRigidbody.get(entityId)
+	@Override
+	protected void process(int entityId) {
+		def transform = mTransform.get(entityId)
+		def rigidBody = mRigidbody.get(entityId)
 
-        transform.setPosition(rigidBody.body.getPosition())
-        transform.x += rigidBody.xOffset
-        transform.y += rigidBody.yOffset
-    }
+		transform.setPosition(rigidBody.body.getPosition())
+		transform.x += rigidBody.xOffset
+		transform.y += rigidBody.yOffset
+	}
 }

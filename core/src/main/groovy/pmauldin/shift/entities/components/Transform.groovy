@@ -6,10 +6,10 @@ import groovy.transform.CompileStatic
 
 @CompileStatic
 class Transform extends Component {
-    float x, y = 0.0f
+	float x, y = 0.0f
 
-    void setPosition(Vector2 position) {
-        this.x = position.x
-        this.y = position.y
-    }
+	void setPosition(Vector2 position) {
+		this.x = position.x
+		this.y = position.y
+	}
 }
