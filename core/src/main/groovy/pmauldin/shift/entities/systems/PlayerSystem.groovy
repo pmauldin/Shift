@@ -11,14 +11,17 @@ import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.QueryCallback
 import com.badlogic.gdx.physics.box2d.World
 import groovy.transform.CompileStatic
+import pmauldin.shift.GameScreen
 import pmauldin.shift.Util.Keyboard
 import pmauldin.shift.entities.components.Player
+import pmauldin.shift.entities.components.Resource
 import pmauldin.shift.entities.components.Rigidbody
 
 @CompileStatic
 class PlayerSystem extends IteratingSystem {
 	ComponentMapper<Player> mPlayer
 	ComponentMapper<Rigidbody> mRigidbody
+	ComponentMapper<Resource> mResource
 
 	@Wire
 	World b2dWorld
@@ -91,7 +94,17 @@ class PlayerSystem extends IteratingSystem {
 		b2dWorld.QueryAABB(new QueryCallback() {
 			@Override
 			boolean reportFixture(Fixture fixture) {
-				System.out.println("Hit!!!!! " + fixture.body.userData)
+				try {
+					int tileId = fixture.body.userData as int
+					if (mResource.has(tileId)) {
+						def resource = mResource.get(tileId)
+						System.out.println("Hit " + resource.type)
+						GameScreen.entityWorld.delete(tileId)
+					}
+				} catch (Exception ex) {
+					System.out.println("Error occurred while hitting tile: " + ex.toString())
+				}
+
 				return true
 			}
 		}, reticulePosition.x - 0.05f as float, reticulePosition.y - 0.05f as float,

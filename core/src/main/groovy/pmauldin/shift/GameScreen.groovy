@@ -27,7 +27,7 @@ import pmauldin.shift.entities.systems.RenderSystem
 class GameScreen implements Screen {
 	static AssetManager assetManager
 
-	World entityWorld
+	static World entityWorld
 	B2DWorld b2dWorld
 	SpriteBatch batch
 

@@ -14,6 +14,7 @@ import pmauldin.shift.Util.EntityTextureUtil
 import pmauldin.shift.assets.Tiles
 import pmauldin.shift.entities.components.Player
 import pmauldin.shift.entities.components.Renderable
+import pmauldin.shift.entities.components.Resource
 import pmauldin.shift.entities.components.Rigidbody
 import pmauldin.shift.entities.components.Transform
 
@@ -26,6 +27,7 @@ class EntityFactory {
 	ComponentMapper<Transform> mPosition
 	ComponentMapper<Renderable> mRender
 	ComponentMapper<Rigidbody> mRigidbody
+	ComponentMapper<Resource> mResource
 
 	void init(World world, B2DWorld b2dWorld) {
 		this.world = world
@@ -86,6 +88,11 @@ class EntityFactory {
 
 						def rigidbody = mRigidbody.create(tileId)
 						rigidbody.body = body
+					}
+
+					if (tile.resource) {
+						def resource = mResource.create(tileId)
+						tile.buildResource(resource)
 					}
 
 					addDrawableComponents(tileId, 0, x, y, tile.entity)

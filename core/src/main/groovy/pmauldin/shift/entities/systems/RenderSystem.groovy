@@ -37,7 +37,7 @@ class RenderSystem extends BaseEntitySystem {
 	void removed(int entityId) {
 		def layerId = mRender.get(entityId).layer
 		def layer = entityLayerMap.get(layerId)
-		layer.removeValue(entityId, true)
+		layer.removeValue(entityId, false)
 	}
 
 	@Override

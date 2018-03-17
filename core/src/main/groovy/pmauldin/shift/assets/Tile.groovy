@@ -6,6 +6,7 @@ import pmauldin.shift.assets.tiles.GrassTile
 import pmauldin.shift.assets.tiles.TreeTile
 import pmauldin.shift.assets.tiles.WaterTile
 import pmauldin.shift.entities.Entity
+import pmauldin.shift.entities.components.Resource
 
 @CompileStatic
 class Tiles {
@@ -24,5 +25,13 @@ abstract class Tile {
 
 	boolean isSolid() {
 		return false
+	}
+
+	boolean isResource() {
+		return false
+	}
+
+	void buildResource(Resource resource) {
+		return
 	}
 }

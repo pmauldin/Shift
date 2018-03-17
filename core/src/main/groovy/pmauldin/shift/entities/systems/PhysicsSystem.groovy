@@ -38,4 +38,12 @@ class PhysicsSystem extends IteratingSystem implements LogicSystem {
 		transform.x += rigidBody.xOffset
 		transform.y += rigidBody.yOffset
 	}
+
+	@Override
+	void removed(int entityId) {
+		def rigidBody = mRigidbody.get(entityId)
+		if (rigidBody) {
+			b2dWorld.destroyBody(rigidBody.body)
+		}
+	}
 }
