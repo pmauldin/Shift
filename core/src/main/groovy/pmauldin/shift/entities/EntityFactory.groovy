@@ -38,9 +38,11 @@ class EntityFactory {
 
 	int createPlayer() {
 		def entity = world.create()
-		mPlayer.create(entity)
+		def player = mPlayer.create(entity)
+		player.xDirection = 0
+		player.yDirection = -1
 
-		def body = createBody(15.0f, 10.0f, createCircleShape(), BodyType.DynamicBody)
+		def body = createBody(15.0f, 10.0f, createCircleShape(0.18f), BodyType.DynamicBody)
 		body.setUserData(entity)
 
 		def rigidbody = mRigidbody.create(entity)
@@ -48,8 +50,24 @@ class EntityFactory {
 		rigidbody.yOffset = 0.35f
 
 		addDrawableComponents(entity, 5, 0, 0, Tile.PLAYER)
+//		player.reticuleId = createReticule()
 
 		return entity
+	}
+
+	int createReticule() {
+		float x = 15.25f
+		float y = 10f
+
+		def entity = world.create()
+
+		def body = createBody(x, y, createCircleShape(0.08f), BodyType.StaticBody)
+		body.setUserData(entity)
+
+		def rigidbody = mRigidbody.create(entity)
+		rigidbody.body = body
+
+		entity
 	}
 
 	void createLevel() {
@@ -117,10 +135,10 @@ class EntityFactory {
 		return shape
 	}
 
-	private static CircleShape createCircleShape() {
+	private static CircleShape createCircleShape(float radius) {
 		def shape = new CircleShape()
 		shape.setPosition(Vector2.Zero)
-		shape.setRadius(0.18f)
+		shape.setRadius(radius)
 		return shape
 	}
 

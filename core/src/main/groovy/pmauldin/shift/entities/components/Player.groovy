@@ -5,4 +5,7 @@ import groovy.transform.CompileStatic
 
 @CompileStatic
 class Player extends Component {
+	Integer xDirection
+	Integer yDirection
+	Integer reticuleId
 }

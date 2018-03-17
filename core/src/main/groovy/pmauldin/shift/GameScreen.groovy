@@ -16,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.Box2D
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
 import com.badlogic.gdx.physics.box2d.World as B2DWorld
 import groovy.transform.CompileStatic
+import pmauldin.shift.Util.Keyboard
 import pmauldin.shift.entities.EntityFactory
 import pmauldin.shift.entities.GameLoopInvoker
 import pmauldin.shift.entities.systems.PhysicsSystem
@@ -88,12 +89,12 @@ class GameScreen implements Screen {
 		entityWorld.setDelta(delta)
 		entityWorld.process()
 
-		if (Util.anyKeyJustPressed(Input.Keys.F2)) {
+		if (Keyboard.anyKeyJustPressed(Input.Keys.F2)) {
 			showB2DDebugRenderer = !showB2DDebugRenderer
 		}
 
 		if (showB2DDebugRenderer) {
-			fpsLogger.log()
+//			fpsLogger.log()
 			b2dRenderer.render(b2dWorld, camera.combined)
 		}
 	}
