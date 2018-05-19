@@ -6,4 +6,5 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class NewInventoryItem extends Component {
 	InventoryItem item
+	int ownerId
 }

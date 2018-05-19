@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
  * Implements a game loop based on this excellent blog post:
  * http://gafferongames.com/game-physics/fix-your-timestep/
  *
- * To avoid floating point rounding errors we only use fixed point numbers for calculations.
+ * To avoid floating point rounding errors I'we only use fixed point numbers for calculations.
  */
 @CompileStatic
 class GameLoopInvoker extends SystemInvocationStrategy {

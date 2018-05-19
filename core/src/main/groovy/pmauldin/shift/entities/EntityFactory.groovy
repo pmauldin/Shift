@@ -6,23 +6,23 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType
-import com.badlogic.gdx.physics.box2d.World as B2DWorld
+import com.badlogic.gdx.physics.box2d.World as Box2DWorld
 import groovy.transform.CompileStatic
 import pmauldin.shift.Constants
-import pmauldin.shift.assets.Tile
 import pmauldin.shift.Util.EntityTextureUtil
+import pmauldin.shift.assets.Tile
 import pmauldin.shift.assets.Tiles
-import pmauldin.shift.entities.components.inventory.Inventory
 import pmauldin.shift.entities.components.Player
-import pmauldin.shift.entities.components.core.Renderable
 import pmauldin.shift.entities.components.Resource
+import pmauldin.shift.entities.components.core.Renderable
 import pmauldin.shift.entities.components.core.Rigidbody
 import pmauldin.shift.entities.components.core.Transform
+import pmauldin.shift.entities.components.inventory.Inventory
 
 @CompileStatic
 class EntityFactory {
 	World world
-	B2DWorld b2dWorld
+	Box2DWorld box2DWorld
 
 	ComponentMapper<Player> mPlayer
 	ComponentMapper<Transform> mPosition
@@ -31,9 +31,9 @@ class EntityFactory {
 	ComponentMapper<Resource> mResource
 	ComponentMapper<Inventory> mInventory
 
-	void init(World world, B2DWorld b2dWorld) {
+	void init(World world, Box2DWorld b2dWorld) {
 		this.world = world
-		this.b2dWorld = b2dWorld
+		this.box2DWorld = b2dWorld
 	}
 
 	int createPlayer() {
@@ -70,6 +70,7 @@ class EntityFactory {
 		final int maxXTree = 30
 		final int yTree = 16
 		final int yWater = 6
+		final int yRock = 7
 
 		for (int x = 0; x <= xTiles; x++) {
 			for (int y = 0; y <= yTiles; y++) {
@@ -80,6 +81,9 @@ class EntityFactory {
 						|| ((x == minXTree || x == maxXTree) && y <= yTree && y > yWater)) {
 					tiles += Tiles.GRASS
 					tiles += Tiles.TREE
+				} else if (x > minXTree && x < maxXTree && y == yRock) {
+					tiles += Tiles.GRASS
+					tiles += Tiles.ROCK
 				} else {
 					tiles += Tiles.GRASS
 				}
@@ -114,7 +118,7 @@ class EntityFactory {
 		def fixtureDef = new FixtureDef()
 		fixtureDef.shape = shape
 
-		def body = b2dWorld.createBody(bodyDef)
+		def body = box2DWorld.createBody(bodyDef)
 		body.createFixture(fixtureDef)
 		shape.dispose()
 

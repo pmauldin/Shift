@@ -6,4 +6,5 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class Resource extends Component {
 	String type
+	int count = 1
 }

@@ -11,16 +11,12 @@ import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.QueryCallback
 import com.badlogic.gdx.physics.box2d.World
 import groovy.transform.CompileStatic
-import pmauldin.shift.GameScreen
 import pmauldin.shift.Util.Keyboard
-import pmauldin.shift.entities.components.core.Renderable
-import pmauldin.shift.entities.components.inventory.InventoryItem
-import pmauldin.shift.entities.components.inventory.NewInventoryItem
 import pmauldin.shift.entities.components.Player
 import pmauldin.shift.entities.components.Resource
+import pmauldin.shift.entities.components.core.Renderable
 import pmauldin.shift.entities.components.core.Rigidbody
 import pmauldin.shift.entities.systems.inventory.InventorySystem
-
 
 @CompileStatic
 class PlayerSystem extends IteratingSystem {
@@ -28,7 +24,6 @@ class PlayerSystem extends IteratingSystem {
 	ComponentMapper<Rigidbody> mRigidbody
 	ComponentMapper<Renderable> mRenderable
 	ComponentMapper<Resource> mResource
-	ComponentMapper<NewInventoryItem> mNewInventoryItem
 
 	@Wire
 	World b2dWorld
@@ -113,16 +108,10 @@ class PlayerSystem extends IteratingSystem {
 				try {
 					int tileId = fixture.body.userData as int
 					if (mResource.has(tileId)) {
-						def resource = mResource.get(tileId)
-						System.out.println("Got " + resource.type)
-
-						def newItem = mNewInventoryItem.create(playerId)
-						newItem.item = new InventoryItem(label: resource.type, count: 1)
-
-						GameScreen.entityWorld.delete(tileId)
+						ResourceSystem.interact(playerId, tileId)
 					}
 				} catch (Exception ex) {
-					System.out.println("Error occurred while hitting tile: " + ex.message)
+					System.out.println("Error occurred while hitting tile: ${ex.message}")
 				}
 
 				return true

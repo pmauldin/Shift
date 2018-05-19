@@ -4,6 +4,7 @@ enum Entity {
 	GRASS(14, 1),
 	WATER(13, 6),
 	TREE(8, 1),
+	ROCK(9, 8),
 	PLAYER_DOWN(0, 8),
 	PLAYER_LEFT(0, 9),
 	PLAYER_RIGHT(0, 10),
