@@ -19,18 +19,18 @@ class Keyboard {
 	}
 
 	static boolean isRightPressed() {
-		return anyKeyPressed(Keys.RIGHT, Keys.D) && !anyKeyPressed(Keys.LEFT, Keys.A)
+		return anyKeyPressed(Keys.RIGHT, Keys.D)
 	}
 
 	static boolean isLeftPressed() {
-		return anyKeyPressed(Keys.LEFT, Keys.A) && !anyKeyPressed(Keys.RIGHT, Keys.D)
+		return anyKeyPressed(Keys.LEFT, Keys.A)
 	}
 
 	static boolean isUpPressed() {
-		return anyKeyPressed(Keys.UP, Keys.W) && !anyKeyPressed(Keys.DOWN, Keys.S)
+		return anyKeyPressed(Keys.UP, Keys.W)
 	}
 
 	static boolean isDownPressed() {
-		return anyKeyPressed(Keys.DOWN, Keys.S) && !anyKeyPressed(Keys.UP, Keys.W)
+		return anyKeyPressed(Keys.DOWN, Keys.S)
 	}
 }

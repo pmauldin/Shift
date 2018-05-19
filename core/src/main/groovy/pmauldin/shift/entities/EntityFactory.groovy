@@ -1,6 +1,5 @@
 package pmauldin.shift.entities
 
-import com.artemis.ComponentMapper
 import com.artemis.World
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.math.Vector2
@@ -12,28 +11,12 @@ import pmauldin.shift.Constants
 import pmauldin.shift.Util.EntityTextureUtil
 import pmauldin.shift.assets.Tile
 import pmauldin.shift.assets.Tiles
-import pmauldin.shift.entities.components.Direction
-import pmauldin.shift.entities.components.Player
-import pmauldin.shift.entities.components.Resource
-import pmauldin.shift.entities.components.Velocity
-import pmauldin.shift.entities.components.core.Renderable
-import pmauldin.shift.entities.components.core.Rigidbody
-import pmauldin.shift.entities.components.core.Transform
-import pmauldin.shift.entities.components.inventory.Inventory
+import pmauldin.shift.entities.components.Components
 
 @CompileStatic
 class EntityFactory {
 	World world
 	Box2DWorld box2DWorld
-
-	ComponentMapper<Player> mPlayer
-	ComponentMapper<Transform> mPosition
-	ComponentMapper<Renderable> mRender
-	ComponentMapper<Rigidbody> mRigidbody
-	ComponentMapper<Resource> mResource
-	ComponentMapper<Inventory> mInventory
-	ComponentMapper<Velocity> mVelocity
-	ComponentMapper<Direction> mDirection
 
 	void init(World world, Box2DWorld b2dWorld) {
 		this.world = world
@@ -42,22 +25,21 @@ class EntityFactory {
 
 	int createPlayer() {
 		def playerId = world.create()
-		def player = mPlayer.create(playerId)
-
 		def body = createBody(15.0f, 10.0f, createCircleShape(0.18f), BodyType.DynamicBody)
 		body.setUserData(playerId)
 
-		def rigidbody = mRigidbody.create(playerId)
+		def rigidbody = Components.mRigidbody.create(playerId)
 		rigidbody.body = body
 		rigidbody.yOffset = 0.35f
 
 		addDrawableComponents(playerId, 5, 0, 0, Entity.PLAYER_ENTITIES)
 
-		def inventory = mInventory.create(playerId)
+		def inventory = Components.mInventory.create(playerId)
 		inventory.itemsMap = new HashMap<>()
 
-		def velocity = mVelocity.create(playerId)
-		def direction = mDirection.create(playerId)
+		def velocity = Components.mVelocity.create(playerId)
+		def direction = Components.mDirection.create(playerId)
+		velocity.speed = 10.0f
 		direction.y = -1
 
 		return playerId
@@ -101,12 +83,12 @@ class EntityFactory {
 						def body = createBody(x, y, createBoxShape(1f, 1f))
 						body.setUserData(tileId)
 
-						def rigidbody = mRigidbody.create(tileId)
+						def rigidbody = Components.mRigidbody.create(tileId)
 						rigidbody.body = body
 					}
 
 					if (tile.resource) {
-						def resource = mResource.create(tileId)
+						def resource = Components.mResource.create(tileId)
 						tile.buildResource(resource)
 					}
 
@@ -144,12 +126,12 @@ class EntityFactory {
 		return shape
 	}
 
-	void addDrawableComponents(int entityId, int layer, float x, float y, List<Entity> entities) {
-		def pos = mPosition.create(entityId)
+	static void addDrawableComponents(int entityId, int layer, float x, float y, List<Entity> entities) {
+		def pos = Components.mTransform.create(entityId)
 		pos.x = x
 		pos.y = y
 
-		def renderComponent = mRender.create(entityId)
+		def renderComponent = Components.mRenderable.create(entityId)
 		renderComponent.sprites = new ArrayList<>()
 		renderComponent.layer = layer
 		renderComponent.activeSprite = 0

@@ -1,49 +1,89 @@
 package pmauldin.shift.entities.systems
 
 import com.artemis.Aspect
-import com.artemis.ComponentMapper
 import com.artemis.annotations.Wire
 import com.artemis.systems.IteratingSystem
 import com.badlogic.gdx.Input.Keys
+import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.QueryCallback
 import com.badlogic.gdx.physics.box2d.World
 import groovy.transform.CompileStatic
+import pmauldin.shift.Util.Keyboard
 import pmauldin.shift.entities.EntityManager
 import pmauldin.shift.entities.LogicSystem
-import pmauldin.shift.entities.components.Direction
-import pmauldin.shift.entities.components.Resource
-import pmauldin.shift.entities.components.core.Rigidbody
+import pmauldin.shift.entities.components.Components
 import pmauldin.shift.entities.components.events.InputEvent
 import pmauldin.shift.entities.components.events.InputEvent.InputType
 import pmauldin.shift.entities.systems.inventory.InventorySystem
 
 @CompileStatic
 class PlayerInputSystem extends IteratingSystem implements LogicSystem {
-	static ComponentMapper<InputEvent> mInputEvent
-	static ComponentMapper<Direction> mDirection
-	static ComponentMapper<Resource> mResource
-	static ComponentMapper<Rigidbody> mRigidbody
-	
+	class SpriteDirection {
+		static final int DOWN = 0, LEFT = 1, RIGHT = 2, UP = 3
+	}
+
 	private static int[] ACTION = [Keys.SPACE]
 	private static int[] INVENTORY = [Keys.I]
 
-	@Wire
-	World b2dWorld
+	private final Camera camera
 
-	PlayerInputSystem() {
+	@Wire
+	private final World box2dWorld
+
+	PlayerInputSystem(Camera camera) {
 		super(Aspect.all(InputEvent))
+		this.camera = camera
 	}
 
 	@Override
 	protected void process(int entityId) {
-		def inputEvent = mInputEvent.get(entityId)
+		def inputEvent = Components.mInputEvent.get(entityId)
 		def consumed = processInput(inputEvent)
 		if (consumed) {
 			EntityManager.delete(entityId)
 		}
 	}
-	
+
+	@Override
+	protected void begin() {
+		def playerId = EntityManager.playerId
+		def direction = Components.mDirection.get(playerId)
+		def velocity = Components.mVelocity.get(playerId)
+		def renderable = Components.mRenderable.get(playerId)
+
+		if (Keyboard.isUpPressed() && velocity.y != -1) {
+			velocity.y = 1
+			direction.y = 1
+			direction.x = 0
+			renderable.activeSprite = SpriteDirection.UP
+		} else if (Keyboard.isDownPressed()) {
+			velocity.y = -1
+			direction.y = -1
+			direction.x = 0
+			renderable.activeSprite = SpriteDirection.DOWN
+		} else {
+			velocity.y = 0
+		}
+
+		if (Keyboard.isLeftPressed() && velocity.x != 1) {
+			velocity.x = -1
+			direction.x = -1
+			direction.y = 0
+			renderable.activeSprite = SpriteDirection.LEFT
+		} else if (Keyboard.isRightPressed()) {
+			velocity.x = 1
+			direction.x = 1
+			direction.y = 0
+			renderable.activeSprite = SpriteDirection.RIGHT
+		} else {
+			velocity.x = 0
+		}
+
+		def body = Components.mRigidbody.get(playerId).body
+		camera.position.set(body.position.x, body.position.y, 0)
+	}
+
 	private boolean processInput(InputEvent inputEvent) {
 		def playerId = EntityManager.playerId
 
@@ -51,9 +91,9 @@ class PlayerInputSystem extends IteratingSystem implements LogicSystem {
 		def type = inputEvent.type
 		def consumed = true
 
-		if (keyCode in ACTION && type == InputType.DOWN) {
+		if (keyCode in ACTION && type == InputType.PRESSED) {
 			attack(playerId)
-		} else if (keyCode in INVENTORY && type == InputType.DOWN) {
+		} else if (keyCode in INVENTORY && type == InputType.PRESSED) {
 			InventorySystem.printInventory(playerId)
 		} else {
 			consumed = false
@@ -63,19 +103,19 @@ class PlayerInputSystem extends IteratingSystem implements LogicSystem {
 	}
 
 	private void attack(int playerId) {
-		def direction = mDirection.get(playerId)
-		def body = mRigidbody.get(playerId).body
+		def direction = Components.mDirection.get(playerId)
+		def body = Components.mRigidbody.get(playerId).body
 		def reticulePosition = body.position.cpy()
 
 		reticulePosition.x += 0.5f * direction.x as float
 		reticulePosition.y += (0.5f * direction.y as float)
 
-		b2dWorld.QueryAABB(new QueryCallback() {
+		box2dWorld.QueryAABB(new QueryCallback() {
 			@Override
 			boolean reportFixture(Fixture fixture) {
 				try {
 					int tileId = fixture.body.userData as int
-					if (mResource.has(tileId)) {
+					if (Components.mResource.has(tileId)) {
 						ResourceSystem.interact(playerId, tileId)
 					}
 				} catch (Exception ex) {

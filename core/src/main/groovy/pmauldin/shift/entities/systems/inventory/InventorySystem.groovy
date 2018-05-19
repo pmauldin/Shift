@@ -1,19 +1,16 @@
 package pmauldin.shift.entities.systems.inventory
 
 import com.artemis.Aspect
-import com.artemis.ComponentMapper
 import com.artemis.systems.IteratingSystem
 import groovy.transform.CompileStatic
 import pmauldin.shift.entities.EntityManager
 import pmauldin.shift.entities.LogicSystem
-import pmauldin.shift.entities.components.inventory.Inventory
-import pmauldin.shift.entities.components.inventory.InventoryItem
+import pmauldin.shift.entities.components.Components
 import pmauldin.shift.entities.components.events.NewInventoryItem
+import pmauldin.shift.entities.components.inventory.InventoryItem
 
 @CompileStatic
 class InventorySystem extends IteratingSystem implements LogicSystem {
-	static ComponentMapper<Inventory> mInventory
-	static ComponentMapper<NewInventoryItem> mNewInventoryItem
 
 	InventorySystem() {
 		super(Aspect.all(NewInventoryItem))
@@ -24,13 +21,13 @@ class InventorySystem extends IteratingSystem implements LogicSystem {
 
 	@Override
 	protected void process(int entityId) {
-		transferItem(mNewInventoryItem.get(entityId))
+		transferItem(Components.mNewInventoryItem.get(entityId))
 		EntityManager.delete(entityId)
 	}
 
 	private static void transferItem(NewInventoryItem transfer) {
-		if (!mInventory.has(transfer.ownerId)) return
-		def itemsMap = mInventory.get(transfer.ownerId).itemsMap
+		if (!Components.mInventory.has(transfer.ownerId)) return
+		def itemsMap = Components.mInventory.get(transfer.ownerId).itemsMap
 		def newItem = transfer.item
 
 		def item = itemsMap.get(newItem.label, new InventoryItem(label: newItem.label, count: 0))
@@ -39,7 +36,7 @@ class InventorySystem extends IteratingSystem implements LogicSystem {
 	}
 
 	static void printInventory(int entityId) {
-		def inventory = mInventory.get(entityId)
+		def inventory = Components.mInventory.get(entityId)
 		if (inventory == null) return
 
 		System.out.println("\n******* Player Inventory *******\n")

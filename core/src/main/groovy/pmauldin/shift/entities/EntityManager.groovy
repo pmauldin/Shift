@@ -8,8 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.physics.box2d.World as Box2DWorld
 import groovy.transform.CompileStatic
 import pmauldin.shift.Constants
+import pmauldin.shift.entities.components.Components
+import pmauldin.shift.entities.systems.MovementSystem
 import pmauldin.shift.entities.systems.PlayerInputSystem
-import pmauldin.shift.entities.systems.PlayerSystem
 import pmauldin.shift.entities.systems.ResourceSystem
 import pmauldin.shift.entities.systems.core.InputSystem
 import pmauldin.shift.entities.systems.core.PhysicsSystem
@@ -31,10 +32,12 @@ class EntityManager {
 
 		entityWorld = new World(worldConfig)
 		entityWorld.inject(entityFactory)
+		entityWorld.inject(new Components())
 
 		entityFactory.init(entityWorld, box2DWorld)
-		entityFactory.createLevel()
+
 		playerId = entityFactory.createPlayer()
+		entityFactory.createLevel()
 	}
 
 	static void update(float delta) {
@@ -54,8 +57,8 @@ class EntityManager {
 		// Systems are processed in the order defined here.
 		new WorldConfigurationBuilder().with(
 				new InputSystem(),
-				new PlayerInputSystem(),
-				new PlayerSystem(camera),
+				new PlayerInputSystem(camera),
+				new MovementSystem(),
 				new PhysicsSystem(),
 				new RenderSystem(),
 				new InventorySystem(),

@@ -1,21 +1,18 @@
 package pmauldin.shift.entities.systems.core
 
 import com.artemis.Aspect
-import com.artemis.ComponentMapper
 import com.artemis.annotations.Wire
 import com.artemis.systems.IteratingSystem
 import com.badlogic.gdx.physics.box2d.World
 import groovy.transform.CompileStatic
 import pmauldin.shift.Constants
 import pmauldin.shift.entities.LogicSystem
+import pmauldin.shift.entities.components.Components
 import pmauldin.shift.entities.components.core.Rigidbody
 import pmauldin.shift.entities.components.core.Transform
 
 @CompileStatic
 class PhysicsSystem extends IteratingSystem implements LogicSystem {
-	ComponentMapper<Rigidbody> mRigidbody
-	ComponentMapper<Transform> mTransform
-
 	@Wire
 	World b2dWorld
 
@@ -31,8 +28,8 @@ class PhysicsSystem extends IteratingSystem implements LogicSystem {
 
 	@Override
 	protected void process(int entityId) {
-		def transform = mTransform.get(entityId)
-		def rigidBody = mRigidbody.get(entityId)
+		def transform = Components.mTransform.get(entityId)
+		def rigidBody = Components.mRigidbody.get(entityId)
 
 		transform.setPosition(rigidBody.body.getPosition())
 		transform.x += rigidBody.xOffset
@@ -41,7 +38,7 @@ class PhysicsSystem extends IteratingSystem implements LogicSystem {
 
 	@Override
 	void removed(int entityId) {
-		def rigidBody = mRigidbody.get(entityId)
+		def rigidBody = Components.mRigidbody.get(entityId)
 		if (rigidBody) {
 			b2dWorld.destroyBody(rigidBody.body)
 		}

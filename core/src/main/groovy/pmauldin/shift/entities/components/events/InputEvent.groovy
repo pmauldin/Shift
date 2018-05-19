@@ -4,11 +4,11 @@ import com.artemis.Component
 
 class InputEvent extends Component {
 	enum InputType {
-		UP,
-		DOWN
+		RELEASED,
+		PRESSED
 	}
 
-	int keyCode;
-	InputType type;
+	int keyCode
+	InputType type
 
 }

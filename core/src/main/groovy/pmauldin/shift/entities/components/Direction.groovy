@@ -24,4 +24,17 @@ class Direction extends Component {
 			System.out.println("Invalid y direction $y")
 		}
 	}
+
+	boolean equals(o) {
+		if (this.is(o)) return true
+		if (getClass() != o.class) return false
+
+		Direction direction = (Direction) o
+
+		if (x != direction.x) return false
+		if (y != direction.y) return false
+
+		return true
+	}
+
 }
