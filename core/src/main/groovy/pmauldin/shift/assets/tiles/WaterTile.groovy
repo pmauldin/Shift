@@ -2,16 +2,16 @@ package pmauldin.shift.assets.tiles
 
 import groovy.transform.CompileStatic
 import pmauldin.shift.assets.Tile
-import pmauldin.shift.entities.Entity
+import pmauldin.shift.entities.Sprite
 
 @CompileStatic
 class WaterTile extends Tile {
 	WaterTile() {
-		super(Entity.WATER)
+		super(Sprite.WATER)
 	}
 
 	@Override
 	boolean isSolid() {
-		return true
+		true
 	}
 }

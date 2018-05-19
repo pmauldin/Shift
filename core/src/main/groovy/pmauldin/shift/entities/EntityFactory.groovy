@@ -15,15 +15,15 @@ import pmauldin.shift.entities.components.Components
 
 @CompileStatic
 class EntityFactory {
-	World world
-	Box2DWorld box2DWorld
+	static World world
+	static Box2DWorld box2DWorld
 
-	void init(World world, Box2DWorld b2dWorld) {
+	static void init(World world, Box2DWorld box2DWorld) {
 		this.world = world
-		this.box2DWorld = b2dWorld
+		this.box2DWorld = box2DWorld
 	}
 
-	int createPlayer() {
+	static int createPlayer() {
 		def playerId = world.create()
 		def body = createBody(15.0f, 10.0f, createCircleShape(0.18f), BodyType.DynamicBody)
 		body.setUserData(playerId)
@@ -32,7 +32,7 @@ class EntityFactory {
 		rigidbody.body = body
 		rigidbody.yOffset = 0.35f
 
-		addDrawableComponents(playerId, 5, 0, 0, Entity.PLAYER_ENTITIES)
+		addDrawableComponents(playerId, 5, 0, 0, pmauldin.shift.entities.Sprite.PLAYER_ENTITIES)
 
 		def inventory = Components.mInventory.create(playerId)
 		inventory.itemsMap = new HashMap<>()
@@ -45,7 +45,7 @@ class EntityFactory {
 		return playerId
 	}
 
-	void createLevel() {
+	static void createLevel() {
 		def tileSize = 32
 		int xTiles = Constants.WIDTH / tileSize as int
 		int yTiles = Constants.HEIGHT / tileSize as int
@@ -53,7 +53,7 @@ class EntityFactory {
 		createTiles(xTiles, yTiles)
 	}
 
-	void createTiles(int xTiles, int yTiles) {
+	private static void createTiles(int xTiles, int yTiles) {
 		final int minXTree = 10
 		final int maxXTree = 30
 		final int yTree = 16
@@ -77,28 +77,32 @@ class EntityFactory {
 				}
 
 				tiles.forEach { Tile tile ->
-					def tileId = world.create()
-
-					if (tile.solid) {
-						def body = createBody(x, y, createBoxShape(1f, 1f))
-						body.setUserData(tileId)
-
-						def rigidbody = Components.mRigidbody.create(tileId)
-						rigidbody.body = body
-					}
-
-					if (tile.resource) {
-						def resource = Components.mResource.create(tileId)
-						tile.buildResource(resource)
-					}
-
-					addDrawableComponents(tileId, 0, x, y, [tile.entity])
+					createTile(tile, x, y)
 				}
 			}
 		}
 	}
 
-	Body createBody(float x, float y, Shape shape, BodyType type = BodyType.KinematicBody) {
+	static void createTile(Tile tile, int x, int y, int layer = 0) {
+		def tileId = world.create()
+
+		if (tile.solid) {
+			def body = createBody(x, y, createBoxShape(1f, 1f))
+			body.setUserData(tileId)
+
+			def rigidbody = Components.mRigidbody.create(tileId)
+			rigidbody.body = body
+		}
+
+		if (tile.resource) {
+			def resource = Components.mResource.create(tileId)
+			tile.buildResource(resource)
+		}
+
+		addDrawableComponents(tileId, layer, x, y, [tile.sprite])
+	}
+
+	private static Body createBody(float x, float y, Shape shape, BodyType type = BodyType.KinematicBody) {
 		def bodyDef = new BodyDef()
 		bodyDef.type = type
 		bodyDef.position.set(x, y)
@@ -126,7 +130,8 @@ class EntityFactory {
 		return shape
 	}
 
-	static void addDrawableComponents(int entityId, int layer, float x, float y, List<Entity> entities) {
+	private
+	static void addDrawableComponents(int entityId, int layer, float x, float y, List<pmauldin.shift.entities.Sprite> entities) {
 		def pos = Components.mTransform.create(entityId)
 		pos.x = x
 		pos.y = y

@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.QueryCallback
 import com.badlogic.gdx.physics.box2d.World
 import groovy.transform.CompileStatic
 import pmauldin.shift.Util.Keyboard
+import pmauldin.shift.entities.EntityFactory
 import pmauldin.shift.entities.EntityManager
 import pmauldin.shift.entities.LogicSystem
 import pmauldin.shift.entities.components.Components
@@ -27,6 +28,8 @@ class PlayerInputSystem extends IteratingSystem implements LogicSystem {
 	private static int[] INVENTORY = [Keys.I]
 
 	private final Camera camera
+
+	private Integer playerId
 
 	@Wire
 	private final World box2dWorld
@@ -47,7 +50,7 @@ class PlayerInputSystem extends IteratingSystem implements LogicSystem {
 
 	@Override
 	protected void begin() {
-		def playerId = EntityManager.playerId
+		if (!playerId) playerId = EntityManager.playerId
 		def direction = Components.mDirection.get(playerId)
 		def velocity = Components.mVelocity.get(playerId)
 		def renderable = Components.mRenderable.get(playerId)
@@ -85,16 +88,16 @@ class PlayerInputSystem extends IteratingSystem implements LogicSystem {
 	}
 
 	private boolean processInput(InputEvent inputEvent) {
-		def playerId = EntityManager.playerId
-
 		def keyCode = inputEvent.keyCode
 		def type = inputEvent.type
 		def consumed = true
 
 		if (keyCode in ACTION && type == InputType.PRESSED) {
-			attack(playerId)
+			attack()
 		} else if (keyCode in INVENTORY && type == InputType.PRESSED) {
 			InventorySystem.printInventory(playerId)
+		} else if (keyCode in [Keys.R] && type == InputType.PRESSED) {
+			place()
 		} else {
 			consumed = false
 		}
@@ -102,7 +105,17 @@ class PlayerInputSystem extends IteratingSystem implements LogicSystem {
 		consumed
 	}
 
-	private void attack(int playerId) {
+	private void place() {
+		def inventory = Components.mInventory.get(playerId).itemsMap
+		if (inventory.size() == 0) return
+
+		def selectedResource = inventory.get(inventory.keySet().first()).resource
+		if (!InventorySystem.consumeItem(selectedResource, playerId)) return
+		System.out.println("Placing ${selectedResource.type}")
+		EntityFactory.createTile(selectedResource.tile, 10, 10, 1)
+	}
+
+	private void attack() {
 		def direction = Components.mDirection.get(playerId)
 		def body = Components.mRigidbody.get(playerId).body
 		def reticulePosition = body.position.cpy()

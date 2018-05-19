@@ -18,7 +18,7 @@ class Components {
 	static ComponentMapper<Direction> mDirection
 	static ComponentMapper<Velocity> mVelocity
 
-	static ComponentMapper<Resource> mResource
+	static ComponentMapper<ResourceComponent> mResource
 	static ComponentMapper<Inventory> mInventory
 	static ComponentMapper<NewInventoryItem> mNewInventoryItem
 }

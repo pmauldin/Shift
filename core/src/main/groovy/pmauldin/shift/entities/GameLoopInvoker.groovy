@@ -94,7 +94,7 @@ class GameLoopInvoker extends SystemInvocationStrategy {
 //		world.setDelta(nanosPerLogicTick * 0.000000001f as float)
 
 		while (accumulator >= nanosPerLogicTick) {
-			/** Process all entity systems inheriting from {@link LogicSystem} */
+			/** Process all sprite systems inheriting from {@link LogicSystem} */
 			for (int i = 0; i < logicMarkedSystems.size; i++) {
 				/**
 				 * Make sure your systems keep the current state before calculating the new state
@@ -121,7 +121,7 @@ class GameLoopInvoker extends SystemInvocationStrategy {
 		 */
 //		float alpha = (float) accumulator / nanosPerLogicTick
 
-		/** Process all NON {@link LogicSystem} inheriting entity systems */
+		/** Process all NON {@link LogicSystem} inheriting sprite systems */
 		for (int i = 0; i < otherSystems.size; i++) {
 			/**
 			 * Use the kept state from the logic above and interpolate with the current state within your render systems.

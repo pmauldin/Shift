@@ -14,17 +14,18 @@ class ResourceSystem extends BaseSystem implements LogicSystem {
 	protected void processSystem() {}
 
 	static void interact(int characterId, int resourceId) {
-		def resource = Components.mResource.get(resourceId)
+		def component = Components.mResource.get(resourceId)
+		def resource = component.resource
 		System.out.println("$characterId got ${resource.type}")
 
 		def inventoryTransfer = EntityManager.create()
 		def newItem = Components.mNewInventoryItem.create(inventoryTransfer)
 		newItem.ownerId = characterId
-		newItem.item = new InventoryItem(label: resource.type, count: 1)
+		newItem.item = new InventoryItem(resource: resource, count: 1)
 
-		resource.count--
+		component.count--
 
-		if (resource.count <= 0) {
+		if (component.count <= 0) {
 			EntityManager.delete(resourceId)
 		}
 	}

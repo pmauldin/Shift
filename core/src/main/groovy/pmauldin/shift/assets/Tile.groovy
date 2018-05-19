@@ -5,8 +5,9 @@ import pmauldin.shift.assets.tiles.GrassTile
 import pmauldin.shift.assets.tiles.RockTile
 import pmauldin.shift.assets.tiles.TreeTile
 import pmauldin.shift.assets.tiles.WaterTile
-import pmauldin.shift.entities.Entity
-import pmauldin.shift.entities.components.Resource
+import pmauldin.shift.entities.Sprite
+import pmauldin.shift.entities.components.ResourceComponent
+import pmauldin.shift.entities.items.Resource
 
 @CompileStatic
 class Tiles {
@@ -18,10 +19,10 @@ class Tiles {
 
 @CompileStatic
 abstract class Tile {
-	Entity entity
+	Sprite sprite
 
-	Tile(Entity entity) {
-		this.entity = entity
+	Tile(Sprite sprite) {
+		this.sprite = sprite
 	}
 
 	boolean isSolid() {
@@ -32,7 +33,12 @@ abstract class Tile {
 		return false
 	}
 
-	void buildResource(Resource resource) {
-		return
+	void buildResource(ResourceComponent resourceComponent) {
+		def resource = new Resource(type: resourceType(), tile: this)
+		resourceComponent.resource = resource
+	}
+
+	protected String resourceType() {
+		null
 	}
 }

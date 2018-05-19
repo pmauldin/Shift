@@ -2,27 +2,26 @@ package pmauldin.shift.assets.tiles
 
 import groovy.transform.CompileStatic
 import pmauldin.shift.assets.Tile
-import pmauldin.shift.entities.Entity
-import pmauldin.shift.entities.components.Resource
+import pmauldin.shift.entities.Sprite
 
 @CompileStatic
 class TreeTile extends Tile {
 	TreeTile() {
-		super(Entity.TREE)
+		super(Sprite.TREE)
 	}
 
 	@Override
 	boolean isSolid() {
-		return true
+		true
 	}
 
 	@Override
 	boolean isResource() {
-		return true
+		true
 	}
 
 	@Override
-	void buildResource(Resource resource) {
-		resource.type = "Wood"
+	protected String resourceType() {
+		"Wood"
 	}
 }

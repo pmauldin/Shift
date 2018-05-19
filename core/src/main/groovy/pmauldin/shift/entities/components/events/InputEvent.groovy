@@ -10,5 +10,6 @@ class InputEvent extends Component {
 
 	int keyCode
 	InputType type
+	boolean markedForRemoval = false
 
 }
