@@ -12,8 +12,10 @@ import pmauldin.shift.Constants
 import pmauldin.shift.Util.EntityTextureUtil
 import pmauldin.shift.assets.Tile
 import pmauldin.shift.assets.Tiles
+import pmauldin.shift.entities.components.Direction
 import pmauldin.shift.entities.components.Player
 import pmauldin.shift.entities.components.Resource
+import pmauldin.shift.entities.components.Velocity
 import pmauldin.shift.entities.components.core.Renderable
 import pmauldin.shift.entities.components.core.Rigidbody
 import pmauldin.shift.entities.components.core.Transform
@@ -30,6 +32,8 @@ class EntityFactory {
 	ComponentMapper<Rigidbody> mRigidbody
 	ComponentMapper<Resource> mResource
 	ComponentMapper<Inventory> mInventory
+	ComponentMapper<Velocity> mVelocity
+	ComponentMapper<Direction> mDirection
 
 	void init(World world, Box2DWorld b2dWorld) {
 		this.world = world
@@ -37,24 +41,26 @@ class EntityFactory {
 	}
 
 	int createPlayer() {
-		def entity = world.create()
-		def player = mPlayer.create(entity)
-		player.xDirection = 0
-		player.yDirection = -1
+		def playerId = world.create()
+		def player = mPlayer.create(playerId)
 
 		def body = createBody(15.0f, 10.0f, createCircleShape(0.18f), BodyType.DynamicBody)
-		body.setUserData(entity)
+		body.setUserData(playerId)
 
-		def rigidbody = mRigidbody.create(entity)
+		def rigidbody = mRigidbody.create(playerId)
 		rigidbody.body = body
 		rigidbody.yOffset = 0.35f
 
-		addDrawableComponents(entity, 5, 0, 0, Entity.PLAYER_ENTITIES)
+		addDrawableComponents(playerId, 5, 0, 0, Entity.PLAYER_ENTITIES)
 
-		def inventory = mInventory.create(entity)
+		def inventory = mInventory.create(playerId)
 		inventory.itemsMap = new HashMap<>()
 
-		return entity
+		def velocity = mVelocity.create(playerId)
+		def direction = mDirection.create(playerId)
+		direction.y = -1
+
+		return playerId
 	}
 
 	void createLevel() {

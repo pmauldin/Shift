@@ -8,7 +8,7 @@ import pmauldin.shift.entities.EntityManager
 import pmauldin.shift.entities.LogicSystem
 import pmauldin.shift.entities.components.inventory.Inventory
 import pmauldin.shift.entities.components.inventory.InventoryItem
-import pmauldin.shift.entities.components.inventory.NewInventoryItem
+import pmauldin.shift.entities.components.events.NewInventoryItem
 
 @CompileStatic
 class InventorySystem extends IteratingSystem implements LogicSystem {
@@ -25,7 +25,7 @@ class InventorySystem extends IteratingSystem implements LogicSystem {
 	@Override
 	protected void process(int entityId) {
 		transferItem(mNewInventoryItem.get(entityId))
-		EntityManager.deleteEntity(entityId)
+		EntityManager.delete(entityId)
 	}
 
 	private static void transferItem(NewInventoryItem transfer) {

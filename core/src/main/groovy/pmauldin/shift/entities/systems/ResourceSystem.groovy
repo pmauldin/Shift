@@ -7,7 +7,7 @@ import pmauldin.shift.entities.EntityManager
 import pmauldin.shift.entities.LogicSystem
 import pmauldin.shift.entities.components.Resource
 import pmauldin.shift.entities.components.inventory.InventoryItem
-import pmauldin.shift.entities.components.inventory.NewInventoryItem
+import pmauldin.shift.entities.components.events.NewInventoryItem
 
 @CompileStatic
 class ResourceSystem extends BaseSystem implements LogicSystem {
@@ -21,7 +21,7 @@ class ResourceSystem extends BaseSystem implements LogicSystem {
 		def resource = mResource.get(resourceId)
 		System.out.println("$characterId got ${resource.type}")
 
-		def inventoryTransfer = EntityManager.createEntity()
+		def inventoryTransfer = EntityManager.create()
 		def newItem = mNewInventoryItem.create(inventoryTransfer)
 		newItem.ownerId = characterId
 		newItem.item = new InventoryItem(label: resource.type, count: 1)
@@ -29,7 +29,7 @@ class ResourceSystem extends BaseSystem implements LogicSystem {
 		resource.count--
 
 		if (resource.count <= 0) {
-			EntityManager.deleteEntity(resourceId)
+			EntityManager.delete(resourceId)
 		}
 	}
 }

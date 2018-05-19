@@ -8,8 +8,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.physics.box2d.World as Box2DWorld
 import groovy.transform.CompileStatic
 import pmauldin.shift.Constants
+import pmauldin.shift.entities.systems.PlayerInputSystem
 import pmauldin.shift.entities.systems.PlayerSystem
 import pmauldin.shift.entities.systems.ResourceSystem
+import pmauldin.shift.entities.systems.core.InputSystem
 import pmauldin.shift.entities.systems.core.PhysicsSystem
 import pmauldin.shift.entities.systems.core.RenderSystem
 import pmauldin.shift.entities.systems.inventory.InventorySystem
@@ -17,6 +19,7 @@ import pmauldin.shift.entities.systems.inventory.InventorySystem
 @CompileStatic
 class EntityManager {
 	static World entityWorld
+	static int playerId
 
 	static void init(OrthographicCamera camera, SpriteBatch batch, Box2DWorld box2DWorld) {
 		def worldConfig = configureWorld(camera)
@@ -30,8 +33,8 @@ class EntityManager {
 		entityWorld.inject(entityFactory)
 
 		entityFactory.init(entityWorld, box2DWorld)
-		entityFactory.createPlayer()
 		entityFactory.createLevel()
+		playerId = entityFactory.createPlayer()
 	}
 
 	static void update(float delta) {
@@ -39,17 +42,19 @@ class EntityManager {
 		entityWorld.process()
 	}
 
-	static int createEntity() {
+	static int create() {
 		return entityWorld.create()
 	}
 
-	static void deleteEntity(int entityId) {
+	static void delete(int entityId) {
 		entityWorld.delete(entityId)
 	}
 
 	private static WorldConfiguration configureWorld(OrthographicCamera camera) {
 		// Systems are processed in the order defined here.
 		new WorldConfigurationBuilder().with(
+				new InputSystem(),
+				new PlayerInputSystem(),
 				new PlayerSystem(camera),
 				new PhysicsSystem(),
 				new RenderSystem(),
