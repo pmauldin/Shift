@@ -3,12 +3,13 @@ package pmauldin.shift.entities.systems
 import com.artemis.Aspect
 import com.artemis.systems.IteratingSystem
 import groovy.transform.CompileStatic
+import pmauldin.shift.entities.LogicSystem
 import pmauldin.shift.entities.components.Components
 import pmauldin.shift.entities.components.Velocity
 import pmauldin.shift.entities.components.core.Rigidbody
 
 @CompileStatic
-class MovementSystem extends IteratingSystem {
+class MovementSystem extends IteratingSystem implements LogicSystem {
 
 	MovementSystem() {
 		super(Aspect.all(Velocity, Rigidbody))

@@ -12,6 +12,7 @@ import pmauldin.shift.entities.components.Components
 import pmauldin.shift.entities.systems.MovementSystem
 import pmauldin.shift.entities.systems.PlayerInputSystem
 import pmauldin.shift.entities.systems.ResourceSystem
+import pmauldin.shift.entities.systems.TileSystem
 import pmauldin.shift.entities.systems.core.InputSystem
 import pmauldin.shift.entities.systems.core.PhysicsSystem
 import pmauldin.shift.entities.systems.core.RenderSystem
@@ -57,6 +58,7 @@ class EntityManager {
 		// Systems are processed in the order defined here.
 		new WorldConfigurationBuilder().with(
 				new InputSystem(),
+				new TileSystem(),
 				new PlayerInputSystem(camera),
 				new MovementSystem(),
 				new PhysicsSystem(),

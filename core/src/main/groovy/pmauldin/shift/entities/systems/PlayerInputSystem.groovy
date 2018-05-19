@@ -135,7 +135,7 @@ class PlayerInputSystem extends IteratingSystem implements LogicSystem {
 					System.out.println("Error occurred while hitting tile: ${ex.message}")
 				}
 
-				return true
+				return false
 			}
 		}, reticulePosition.x - 0.05f as float, reticulePosition.y - 0.05f as float,
 				reticulePosition.x + 0.05f as float, reticulePosition.y + 0.05f as float)

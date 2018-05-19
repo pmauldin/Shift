@@ -85,6 +85,8 @@ class EntityFactory {
 
 	static void createTile(Tile tile, int x, int y, int layer = 0) {
 		def tileId = world.create()
+		def tileComponent = Components.mTile.create(tileId)
+		tileComponent.tile = tile
 
 		if (tile.solid) {
 			def body = createBody(x, y, createBoxShape(1f, 1f))
