@@ -51,7 +51,7 @@ class RenderSystem extends BaseEntitySystem {
 				def renderable = Components.mRenderable.get(entityId)
 				def sprite = renderable.sprites.get(renderable.activeSprite)
 
-				sprite.setPosition(pos.x - sprite.getOriginX() as float, pos.y - sprite.getOriginY() as float)
+				sprite.setPosition(pos.x, pos.y)
 				sprite.draw(batch)
 			}
 		}

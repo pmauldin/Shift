@@ -6,7 +6,6 @@ import pmauldin.shift.assets.tiles.RockTile
 import pmauldin.shift.assets.tiles.TreeTile
 import pmauldin.shift.assets.tiles.WaterTile
 import pmauldin.shift.entities.Sprite
-import pmauldin.shift.entities.components.ResourceComponent
 import pmauldin.shift.entities.items.Resource
 
 @CompileStatic
@@ -17,7 +16,6 @@ class Tiles {
 	static Tile ROCK = new RockTile()
 }
 
-@CompileStatic
 abstract class Tile {
 	Sprite sprite
 
@@ -33,9 +31,8 @@ abstract class Tile {
 		return false
 	}
 
-	void buildResource(ResourceComponent resourceComponent) {
-		def resource = new Resource(type: resourceType(), tile: this)
-		resourceComponent.resource = resource
+	Resource buildResource() {
+		new Resource(type: resourceType(), tile: this)
 	}
 
 	protected String resourceType() {

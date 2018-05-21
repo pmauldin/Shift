@@ -25,12 +25,11 @@ class EntityFactory {
 
 	static int createPlayer() {
 		def playerId = world.create()
-		def body = createBody(15.0f, 10.0f, createCircleShape(0.18f), BodyType.DynamicBody)
+		def body = createBody(15.0f, 10.0f, createCircleShape(0.18f, 0.5f, 0.22f), BodyType.DynamicBody)
 		body.setUserData(playerId)
 
 		def rigidbody = Components.mRigidbody.create(playerId)
 		rigidbody.body = body
-		rigidbody.yOffset = 0.35f
 
 		addDrawableComponents(playerId, 5, 0, 0, pmauldin.shift.entities.Sprite.PLAYER_ENTITIES)
 
@@ -97,8 +96,8 @@ class EntityFactory {
 		}
 
 		if (tile.resource) {
-			def resource = Components.mResource.create(tileId)
-			tile.buildResource(resource)
+			def resourceComponent = Components.mResource.create(tileId)
+			resourceComponent.resource = tile.buildResource()
 		}
 
 		addDrawableComponents(tileId, layer, x, y, [tile.sprite])
@@ -121,13 +120,16 @@ class EntityFactory {
 
 	private static PolygonShape createBoxShape(float width, float height) {
 		def shape = new PolygonShape()
-		shape.setAsBox(width / 2 as float, height / 2 as float)
+		def hx = width / 2 as float
+		def hy = height / 2 as float
+		def center = new Vector2(hx, hy)
+		shape.setAsBox(hx, hy, center, 0)
 		return shape
 	}
 
-	private static CircleShape createCircleShape(float radius) {
+	private static CircleShape createCircleShape(float radius, float xOffset, float yOffset) {
 		def shape = new CircleShape()
-		shape.setPosition(Vector2.Zero)
+		shape.setPosition(new Vector2(xOffset, yOffset))
 		shape.setRadius(radius)
 		return shape
 	}
@@ -147,7 +149,7 @@ class EntityFactory {
 			def sprite = new Sprite(EntityTextureUtil.getEntityTexture(entity))
 			sprite.setPosition(x, y)
 			sprite.setSize(sprite.getWidth() / 32 as float, sprite.getHeight() / 32 as float)
-			sprite.setOrigin(0.5f, 0.5f)
+			sprite.setOrigin(0, 0)
 
 			renderComponent.sprites.add(sprite)
 		}
