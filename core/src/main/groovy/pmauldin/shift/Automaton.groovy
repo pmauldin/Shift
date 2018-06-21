@@ -20,7 +20,7 @@ class Automaton implements Screen {
 	private boolean showFPS = false
 
 	private CellMap cellMap
-	static final int cellSize = 16
+	static final int cellSize = 12
 
 	Automaton() {
 		/* LibGDX */

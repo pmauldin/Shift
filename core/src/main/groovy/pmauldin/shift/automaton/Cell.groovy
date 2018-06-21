@@ -12,10 +12,12 @@ class Cell {
 		DEAD
 	}
 
+	private static int CELL_SIZE = Automaton.cellSize
+
 	int x, y
 	State state
 	State newState
-	private static int CELL_SIZE = Automaton.cellSize
+	List<Cell> neighbors
 
 	ShapeRenderer shapeRenderer
 
@@ -23,6 +25,7 @@ class Cell {
 		this.x = x
 		this.y = y
 
+		neighbors = new ArrayList<>(8)
 		shapeRenderer = new ShapeRenderer()
 	}
 
@@ -45,5 +48,23 @@ class Cell {
 			shapeRenderer.setColor(Color.BLACK)
 		}
 		shapeRenderer.end()
+	}
+
+	boolean equals(o) {
+		if (this.is(o)) return true
+		if (getClass() != o.class) return false
+
+		Cell cell = (Cell) o
+
+		if (x != cell.x) return false
+		if (y != cell.y) return false
+		if (newState != cell.newState) return false
+		if (state != cell.state) return false
+
+		return true
+	}
+
+	int hashCode() {
+		return 31 * x + y
 	}
 }

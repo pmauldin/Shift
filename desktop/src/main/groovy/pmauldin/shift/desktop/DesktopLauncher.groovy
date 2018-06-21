@@ -14,8 +14,8 @@ class DesktopLauncher {
         config.width = 1280
         config.height = 768
         config.vSyncEnabled = true
-        config.foregroundFPS = 25
-        config.backgroundFPS = 2+5
+        config.foregroundFPS = 45
+        config.backgroundFPS = 45
         new LwjglApplication(new Shift(), config)
     }
 }
