@@ -8,7 +8,8 @@ class Shift extends Game {
 
 	@Override
 	void create() {
-		this.setScreen(new GameScreen())
+//		this.setScreen(new GameScreen())
+		this.setScreen(new Automaton())
 	}
 
 	@Override

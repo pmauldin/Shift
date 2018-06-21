@@ -13,9 +13,9 @@ class DesktopLauncher {
         config.title = "Shift"
         config.width = 1280
         config.height = 768
-        config.vSyncEnabled = false
-        config.foregroundFPS = 0
-        config.backgroundFPS = 0
+        config.vSyncEnabled = true
+        config.foregroundFPS = 25
+        config.backgroundFPS = 2+5
         new LwjglApplication(new Shift(), config)
     }
 }
