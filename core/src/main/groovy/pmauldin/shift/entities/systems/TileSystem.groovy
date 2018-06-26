@@ -22,7 +22,7 @@ class TileSystem extends BaseEntitySystem implements LogicSystem {
 	}
 
 	static List<Integer> getTileIdsPosition(Vector2 position) {
-		tileMap.get(new Vector2(position.x as int, position.y as int))
+		tileMap.get(position)
 	}
 
 	@Override

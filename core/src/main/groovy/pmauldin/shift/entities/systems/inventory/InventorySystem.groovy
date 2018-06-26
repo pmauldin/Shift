@@ -23,7 +23,7 @@ class InventorySystem extends IteratingSystem implements LogicSystem {
 		EntityManager.delete(entityId)
 	}
 
-	static void transferItem(NewInventoryItem transfer) {
+	private static void transferItem(NewInventoryItem transfer) {
 		if (!Components.mInventory.has(transfer.ownerId)) return
 		def itemsMap = Components.mInventory.get(transfer.ownerId).itemsMap
 		def newItem = transfer.item

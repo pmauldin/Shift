@@ -5,19 +5,17 @@ import com.artemis.annotations.Wire
 import com.artemis.systems.IteratingSystem
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.graphics.Camera
-import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.Fixture
+import com.badlogic.gdx.physics.box2d.QueryCallback
 import com.badlogic.gdx.physics.box2d.World
 import groovy.transform.CompileStatic
 import pmauldin.shift.Util.Keyboard
-import pmauldin.shift.assets.Tiles
 import pmauldin.shift.entities.EntityFactory
 import pmauldin.shift.entities.EntityManager
 import pmauldin.shift.entities.LogicSystem
 import pmauldin.shift.entities.components.Components
 import pmauldin.shift.entities.components.events.InputEvent
 import pmauldin.shift.entities.components.events.InputEvent.InputType
-import pmauldin.shift.entities.components.events.NewInventoryItem
-import pmauldin.shift.entities.components.inventory.InventoryItem
 import pmauldin.shift.entities.systems.inventory.InventorySystem
 
 @CompileStatic
@@ -26,10 +24,8 @@ class PlayerInputSystem extends IteratingSystem implements LogicSystem {
 		static final int DOWN = 0, LEFT = 1, RIGHT = 2, UP = 3
 	}
 
-	private static final int[] ACTION = [Keys.SPACE]
-	private static final int[] INVENTORY = [Keys.I]
-
-	private static final Vector2 RETICULE_OFFSET = new Vector2(0.5f, 0.28f)
+	private static int[] ACTION = [Keys.SPACE]
+	private static int[] INVENTORY = [Keys.I]
 
 	private final Camera camera
 
@@ -97,13 +93,11 @@ class PlayerInputSystem extends IteratingSystem implements LogicSystem {
 		def consumed = true
 
 		if (keyCode in ACTION && type == InputType.PRESSED) {
-			gather()
+			attack()
 		} else if (keyCode in INVENTORY && type == InputType.PRESSED) {
 			InventorySystem.printInventory(playerId)
 		} else if (keyCode in [Keys.R] && type == InputType.PRESSED) {
 			place()
-		} else if (keyCode in [Keys.C] && type == InputType.PRESSED) {
-			InventorySystem.transferItem(new NewInventoryItem(item: new InventoryItem(resource: Tiles.TREE.buildResource(), count: 100), ownerId: playerId))
 		} else {
 			consumed = false
 		}
@@ -116,39 +110,34 @@ class PlayerInputSystem extends IteratingSystem implements LogicSystem {
 		if (inventory.size() == 0) return
 
 		def selectedResource = inventory.get(inventory.keySet().first()).resource
-
-		def target = getTarget()
-		def tiles = TileSystem.getTileIdsPosition(target)
-		def tileFree = !tiles || getTilesAtTarget().every {
-			!Components.mTile.get(it).tile.isSolid()
-		}
-
-		if (!tileFree || !InventorySystem.consumeItem(selectedResource, playerId)) return
-		EntityFactory.createTile(selectedResource.tile, target.x as int, target.y as int)
+		if (!InventorySystem.consumeItem(selectedResource, playerId)) return
+		System.out.println("Placing ${selectedResource.type}")
+		EntityFactory.createTile(selectedResource.tile, 10, 10, 1)
 	}
 
-	private void gather() {
-		def tiles = getTilesAtTarget()
-		def resource = tiles.find {
-			Components.mResource.has(it)
-		}
-		if (!resource) return
-		ResourceSystem.interact(playerId, resource)
-	}
-
-	private List<Integer> getTilesAtTarget() {
-		def tiles = TileSystem.getTileIdsPosition(getTarget())
-		return tiles ? tiles : new ArrayList<Integer>()
-	}
-
-	private Vector2 getTarget() {
+	private void attack() {
 		def direction = Components.mDirection.get(playerId)
-		def position = Components.mTransform.get(playerId).position.cpy()
-		def reticulePosition = position.cpy().add(RETICULE_OFFSET)
+		def body = Components.mRigidbody.get(playerId).body
+		def reticulePosition = body.position.cpy()
 
-		reticulePosition.x += 0.8f * direction.x as float
-		reticulePosition.y += 0.8f * direction.y as float
+		reticulePosition.x += 0.5f * direction.x as float
+		reticulePosition.y += (0.5f * direction.y as float)
 
-		return reticulePosition
+		box2dWorld.QueryAABB(new QueryCallback() {
+			@Override
+			boolean reportFixture(Fixture fixture) {
+				try {
+					int tileId = fixture.body.userData as int
+					if (Components.mResource.has(tileId)) {
+						ResourceSystem.interact(playerId, tileId)
+					}
+				} catch (Exception ex) {
+					System.out.println("Error occurred while hitting tile: ${ex.message}")
+				}
+
+				return false
+			}
+		}, reticulePosition.x - 0.05f as float, reticulePosition.y - 0.05f as float,
+				reticulePosition.x + 0.05f as float, reticulePosition.y + 0.05f as float)
 	}
 }
