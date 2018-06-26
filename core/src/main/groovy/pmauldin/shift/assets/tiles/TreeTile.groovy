@@ -14,14 +14,4 @@ class TreeTile extends Tile {
 	boolean isSolid() {
 		true
 	}
-
-	@Override
-	boolean isResource() {
-		true
-	}
-
-	@Override
-	protected String resourceType() {
-		"Wood"
-	}
 }

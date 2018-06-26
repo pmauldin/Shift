@@ -11,7 +11,7 @@ import pmauldin.shift.Constants
 import pmauldin.shift.entities.components.Components
 import pmauldin.shift.entities.systems.MovementSystem
 import pmauldin.shift.entities.systems.PlayerInputSystem
-import pmauldin.shift.entities.systems.ResourceSystem
+
 import pmauldin.shift.entities.systems.TileSystem
 import pmauldin.shift.entities.systems.core.InputSystem
 import pmauldin.shift.entities.systems.core.PhysicsSystem
@@ -63,8 +63,7 @@ class EntityManager {
 				new MovementSystem(),
 				new PhysicsSystem(),
 				new RenderSystem(),
-				new InventorySystem(),
-				new ResourceSystem())
+				new InventorySystem())
 				.register(new GameLoopInvoker(Constants.MILLIS_PER_LOGIC_TICK))
 				.build()
 	}

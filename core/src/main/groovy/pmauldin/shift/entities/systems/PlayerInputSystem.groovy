@@ -96,23 +96,11 @@ class PlayerInputSystem extends IteratingSystem implements LogicSystem {
 			attack()
 		} else if (keyCode in INVENTORY && type == InputType.PRESSED) {
 			InventorySystem.printInventory(playerId)
-		} else if (keyCode in [Keys.R] && type == InputType.PRESSED) {
-			place()
 		} else {
 			consumed = false
 		}
 
 		consumed
-	}
-
-	private void place() {
-		def inventory = Components.mInventory.get(playerId).itemsMap
-		if (inventory.size() == 0) return
-
-		def selectedResource = inventory.get(inventory.keySet().first()).resource
-		if (!InventorySystem.consumeItem(selectedResource, playerId)) return
-		System.out.println("Placing ${selectedResource.type}")
-		EntityFactory.createTile(selectedResource.tile, 10, 10, 1)
 	}
 
 	private void attack() {
@@ -128,9 +116,6 @@ class PlayerInputSystem extends IteratingSystem implements LogicSystem {
 			boolean reportFixture(Fixture fixture) {
 				try {
 					int tileId = fixture.body.userData as int
-					if (Components.mResource.has(tileId)) {
-						ResourceSystem.interact(playerId, tileId)
-					}
 				} catch (Exception ex) {
 					System.out.println("Error occurred while hitting tile: ${ex.message}")
 				}

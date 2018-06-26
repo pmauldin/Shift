@@ -35,7 +35,6 @@ class EntityFactory {
 		addDrawableComponents(playerId, 5, 0, 0, pmauldin.shift.entities.Sprite.PLAYER_ENTITIES)
 
 		def inventory = Components.mInventory.create(playerId)
-		inventory.itemsMap = new HashMap<>()
 
 		def velocity = Components.mVelocity.create(playerId)
 		def direction = Components.mDirection.create(playerId)
@@ -94,11 +93,6 @@ class EntityFactory {
 
 			def rigidbody = Components.mRigidbody.create(tileId)
 			rigidbody.body = body
-		}
-
-		if (tile.resource) {
-			def resource = Components.mResource.create(tileId)
-			tile.buildResource(resource)
 		}
 
 		addDrawableComponents(tileId, layer, x, y, [tile.sprite])

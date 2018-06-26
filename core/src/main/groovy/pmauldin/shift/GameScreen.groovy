@@ -68,7 +68,7 @@ class GameScreen implements Screen {
 		}
 
 		if (showB2DDebugRenderer) {
-//			fpsLogger.log()
+			fpsLogger.log()
 			b2dRenderer.render(box2DWorld, camera.combined)
 		}
 	}
